@@ -1,0 +1,37 @@
+# Nexa MP
+
+## Sobre
+A Nexa MP é uma empresa de gestão e estratégia digital. O site apresenta serviços de design estratégico, redes sociais e conteúdo, tráfego pago, desenvolvimento web e landing pages e bots de conversação.
+
+## Público
+Empreendedores e marcas em crescimento que precisam estruturar ou melhorar sua presença digital.
+
+## Proposta
+Unir diferentes frentes digitais em uma estratégia coerente, com comunicação clara, execução e acompanhamento.
+
+## Serviços
+- Design Estratégico
+- Redes Sociais & Conteúdo
+- Tráfego Pago
+- Desenvolvimento Web & Landing Pages
+- Bots de Conversação
+
+## Planos publicados
+- Landing Page Avulsa — R$ 500, pagamento único
+- Essencial — R$ 800 por mês
+- Presença Completa — R$ 1.500 por mês
+- Crescimento Contínuo — R$ 3.000 por mês
+
+Os preços e escopos acima são os que constam no projeto e podem ser alterados pela empresa.
+
+## Presença online
+- Site: /
+- Serviços: /#servicos
+- Planos: /#planos
+- Projetos: /#projetos
+- Como funciona: /#como-funciona
+- Contato: /#contato
+- Instagram: https://instagram.com/nexamp_
+
+## Transparência
+O site não deve apresentar clientes, depoimentos, resultados, números, certificações ou cases que não estejam comprovados e aprovados para divulgação.

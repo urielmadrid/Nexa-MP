@@ -1,0 +1,6 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { type ReactNode } from "react";
+
+type ButtonProps={children:ReactNode;href?:string;onClick?:()=>void;variant?:"primary"|"secondary"|"outline";size?:"sm"|"md";className?:string;showArrow?:boolean};
+export default function Button({children,href,onClick,variant="primary",size="md",className="",showArrow=false}:ButtonProps){const base="group inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-300 hover:-translate-y-1 active:translate-y-0";const variants={primary:"bg-brand-orange text-white shadow-[0_0_35px_rgba(255,106,0,.16)] hover:bg-white hover:text-black",secondary:"border border-black/10 bg-black/[.02] text-black hover:border-black/30",outline:"border border-white/15 bg-white/[.03] text-white hover:border-white/35 hover:bg-white/10"};const sizes={sm:"px-4 py-2.5 text-xs",md:"px-5 py-3.5 text-sm"};const content=<>{children}{showArrow&&<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1"/>}</>;if(href)return <Link href={href} className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}>{content}</Link>;return <button type="button" onClick={onClick} className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}>{content}</button>}
