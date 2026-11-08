@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import CreditoNexaMP from "@/src/components/ui/CreditoNexaMP";
 import {
   ArrowRight,
   Brush,
@@ -355,8 +356,9 @@ export default function ModeloSalao() {
       <footer className="bg-[#2a1f1c] px-5 py-10 text-center text-white">
         <p className="font-serif text-xl font-bold">Seu Salão</p>
         <p className="mt-2 text-xs text-white/50">
-          Modelo de landing page criado pela Nexa MP. Todo o conteúdo desta página é ilustrativo.
+          Modelo de landing page. Todo o conteúdo desta página é ilustrativo.
         </p>
+        <CreditoNexaMP className="mt-2" />
         <a
           href="/?plano=landing-avulsa#contato"
           className="cta-press mt-5 inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white hover:text-black"

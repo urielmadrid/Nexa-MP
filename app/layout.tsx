@@ -3,6 +3,9 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import GoogleAnalytics from "@/src/components/analytics/GoogleAnalytics";
 import CookieBanner from "@/src/components/ui/CookieBanner";
+import { CONTATO } from "@/src/lib/data/contato";
+import { SERVICOS } from "@/src/lib/data/servicos";
+import { DESCRICAO_SITE, NOME_ALTERNATIVO, NOME_SITE, SITE_URL, TITULO_SITE } from "@/src/lib/site";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -11,18 +14,19 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
-const INSTAGRAM_URL = "https://instagram.com/nexamp_";
+/** Perfis oficiais. LinkedIn e Facebook entram quando existirem: basta definir as variáveis na Vercel. */
+const PERFIS = [CONTATO.instagramUrl, process.env.NEXT_PUBLIC_LINKEDIN_URL, process.env.NEXT_PUBLIC_FACEBOOK_URL].filter(
+  (url): url is string => Boolean(url),
+);
 
 export const metadata: Metadata = {
-  metadataBase: SITE_URL ? new URL(SITE_URL) : undefined,
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Nexa MP | Estratégia digital para o seu negócio",
-    template: "%s | Nexa MP",
+    default: TITULO_SITE,
+    template: `%s | ${NOME_SITE}`,
   },
-  description:
-    "A Nexa MP une design, conteúdo, tráfego pago, desenvolvimento web e automação em uma estratégia digital para negócios em crescimento.",
-  applicationName: "Nexa MP",
+  description: DESCRICAO_SITE,
+  applicationName: NOME_SITE,
   authors: [{ name: "Nexa MP" }],
   creator: "Nexa MP",
   publisher: "Nexa MP",
@@ -33,23 +37,23 @@ export const metadata: Metadata = {
     "redes sociais",
     "design estratégico",
     "automação",
+    "gestão digital",
     "Nexa MP",
+    "NexaMP",
   ],
-  alternates: SITE_URL ? { canonical: "/" } : undefined,
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    siteName: "Nexa MP",
-    title: "Nexa MP | Estratégia digital para o seu negócio",
-    description:
-      "Design, conteúdo, tráfego pago, web e automação trabalhando em uma estratégia digital só.",
-    url: SITE_URL || undefined,
+    siteName: NOME_SITE,
+    title: TITULO_SITE,
+    description: DESCRICAO_SITE,
+    url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nexa MP | Estratégia digital para o seu negócio",
-    description:
-      "Estratégia digital para negócios em crescimento: design, conteúdo, tráfego, web e automação.",
+    title: TITULO_SITE,
+    description: DESCRICAO_SITE,
   },
   robots: {
     index: true,
@@ -62,9 +66,10 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  verification: process.env.GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
-    : undefined,
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
 };
 
 export const viewport: Viewport = {
@@ -72,36 +77,54 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
+const ID_ORGANIZACAO = `${SITE_URL}/#organization`;
+const ID_SITE = `${SITE_URL}/#website`;
+const URL_LOGO = `${SITE_URL}/icon-512.png`;
+
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Organization",
-      "@id": SITE_URL ? `${SITE_URL}#organization` : undefined,
-      name: "Nexa MP",
-      description:
-        "Estratégia digital com design, conteúdo, tráfego pago, desenvolvimento web e automação.",
-      url: SITE_URL || undefined,
-      sameAs: [INSTAGRAM_URL],
-      email: "contato@nexa-mp.com.br",
-      telephone: "+55 53 9145-6599",
+      "@id": ID_ORGANIZACAO,
+      name: NOME_SITE,
+      alternateName: [NOME_ALTERNATIVO],
+      description: DESCRICAO_SITE,
+      url: `${SITE_URL}/`,
+      logo: { "@type": "ImageObject", "@id": `${SITE_URL}/#logo`, url: URL_LOGO, width: 512, height: 512, caption: NOME_SITE },
+      image: URL_LOGO,
+      sameAs: PERFIS,
+      email: CONTATO.email,
+      telephone: `+${CONTATO.whatsappNumero}`,
+      knowsAbout: SERVICOS.map((servico) => servico.titulo),
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer service",
+          email: CONTATO.email,
+          telephone: `+${CONTATO.whatsappNumero}`,
+          availableLanguage: ["Portuguese"],
+        },
+      ],
     },
     {
       "@type": "WebSite",
-      "@id": SITE_URL ? `${SITE_URL}#website` : undefined,
-      name: "Nexa MP",
-      url: SITE_URL || undefined,
+      "@id": ID_SITE,
+      name: NOME_SITE,
+      alternateName: [NOME_ALTERNATIVO],
+      url: `${SITE_URL}/`,
       inLanguage: "pt-BR",
-      publisher: SITE_URL ? { "@id": `${SITE_URL}#organization` } : undefined,
+      publisher: { "@id": ID_ORGANIZACAO },
     },
     {
       "@type": "WebPage",
-      name: "Nexa MP | Estratégia digital para o seu negócio",
-      description:
-        "Página institucional da Nexa MP com serviços, planos, processo de trabalho e contato.",
-      url: SITE_URL || undefined,
+      "@id": `${SITE_URL}/#webpage`,
+      name: TITULO_SITE,
+      description: DESCRICAO_SITE,
+      url: `${SITE_URL}/`,
       inLanguage: "pt-BR",
-      isPartOf: SITE_URL ? { "@id": `${SITE_URL}#website` } : undefined,
+      isPartOf: { "@id": ID_SITE },
+      about: { "@id": ID_ORGANIZACAO },
     },
   ],
 };

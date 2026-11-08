@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import CreditoNexaMP from "@/src/components/ui/CreditoNexaMP";
 import {
   ArrowRight,
   CalendarDays,
@@ -421,7 +422,10 @@ export default function ModeloBarbearia() {
 
       <footer className="border-t border-[#f3ece0]/10 bg-[#0a0908] py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 text-center text-xs text-[#f3ece0]/45 md:flex-row md:px-8 md:text-left">
-          <p>© Sua Barbearia. Landing page modelo criada pela Nexa MP.</p>
+          <div className="space-y-1">
+            <p>© Sua Barbearia. Landing page modelo, com conteúdo ilustrativo.</p>
+            <CreditoNexaMP destaque="text-[#c8a24a]" />
+          </div>
           <a
             href={`/?plano=${PLANOS[0].id}#contato`}
             className="font-semibold text-[#c8a24a] underline-offset-4 hover:underline"

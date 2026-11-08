@@ -30,6 +30,7 @@ Os preços e escopos acima são os que constam no projeto e podem ser alterados 
 - Como funciona: /#como-funciona
 - Modelos de landing page: /#modelos (modelos de demonstração em /m/salao e /m/barbearia)
 - Planos: /#planos
+- Sobre a Nexa MP: /sobre
 - Contato: /#contato
 - E-mail: contato@nexa-mp.com.br
 - WhatsApp: +55 53 9145-6599

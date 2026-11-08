@@ -1,13 +1,15 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/src/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-
   return {
     rules: {
       userAgent: "*",
       allow: "/",
+      // A rota de envio do formulário não precisa ser rastreada.
+      disallow: ["/api/"],
     },
-    ...(siteUrl ? { sitemap: `${siteUrl.replace(/\/$/, "")}/sitemap.xml` } : {}),
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }
