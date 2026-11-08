@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MODELOS, modeloPorSlug } from "@/src/lib/data/modelos";
 import ModeloSalao from "@/src/components/modelos/ModeloSalao";
+import ModeloBarbearia from "@/src/components/modelos/ModeloBarbearia";
 
 /**
  * Subsite dos modelos de landing page: /m/<slug> (ex.: /m/salao).
@@ -9,6 +10,7 @@ import ModeloSalao from "@/src/components/modelos/ModeloSalao";
  */
 const COMPONENTES: Record<string, () => React.JSX.Element> = {
   salao: ModeloSalao,
+  barbearia: ModeloBarbearia,
 };
 
 type Props = { params: Promise<{ slug: string }> };

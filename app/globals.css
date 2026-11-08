@@ -316,3 +316,13 @@ body { margin: 0; background: #070707; color: #f7f7f5; font-family: var(--font-j
 .nf-orbit { animation: nf-orbit 9s linear infinite; }
 @keyframes nf-blink { 0%,86%,100% { opacity: 1; } 90% { opacity: .25; } 94% { opacity: .9; } 97% { opacity: .3; } }
 .nf-blink { animation: nf-blink 5s steps(1, end) infinite; }
+
+/* ---------- Modelo de barbearia: poste de barbeiro ----------
+   Listras que "sobem". O período do desenho é 42px na direção do gradiente (135deg),
+   então o bloco de repetição mede 42 * 1.414 = 59.4px e o loop não dá salto. */
+@keyframes bb-pole { to { background-position: 0 59.4px; } }
+.bb-pole {
+  background-image: repeating-linear-gradient(135deg, #c8a24a 0 14px, #f3ece0 14px 28px, #1c1814 28px 42px);
+  background-size: 59.4px 59.4px;
+  animation: bb-pole 3.2s linear infinite;
+}

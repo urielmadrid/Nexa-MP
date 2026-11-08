@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { KeyboardEvent } from "react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -23,13 +24,6 @@ const ICONES: Record<string, LucideIcon> = {
   restaurante: UtensilsCrossed,
   clinica: Stethoscope,
 };
-
-const O_QUE_TEM = [
-  "Apresentação do negócio logo no topo",
-  "Serviços explicados de forma simples",
-  "Simulador de agendamento",
-  "Galeria, perguntas frequentes e contato",
-];
 
 /** Mini-site em CSS que rola sozinho dentro da "janela do navegador". */
 function MiniSite() {
@@ -105,10 +99,132 @@ function MiniSite() {
   );
 }
 
+/** Mini-site da barbearia: hero com poste, serviços e uma agenda com horários livres e ocupados. */
+function MiniSiteBarbearia() {
+  const horas = ["09:00", "09:30", "10:00", "10:30"];
+  const celulas = [
+    ["o", "l", "o"],
+    ["l", "o", "o"],
+    ["o", "o", "l"],
+    ["l", "l", "o"],
+  ];
+  return (
+    <div className="mod-scroll" aria-hidden="true">
+      <div className="bg-[#0f0d0b] p-5">
+        <div className="flex items-center justify-between">
+          <span className="font-serif text-sm font-bold uppercase tracking-wider text-[#f3ece0]">Sua Barbearia</span>
+          <span className="rounded-full bg-[#c8a24a] px-3 py-1 text-[9px] font-bold text-[#0f0d0b]">Agendar</span>
+        </div>
+        <div className="mt-7 grid grid-cols-[1.3fr_.7fr] items-center gap-4">
+          <div>
+            <p className="font-serif text-2xl font-bold leading-[1.05] text-[#f3ece0]">
+              Corte, barba e estilo no <span className="italic text-[#c8a24a]">seu horário.</span>
+            </p>
+            <i className="mt-3 block h-1.5 w-full rounded-full bg-[#f3ece0]/15" />
+            <i className="mt-1.5 block h-1.5 w-2/3 rounded-full bg-[#f3ece0]/15" />
+            <span className="mt-4 inline-block rounded-full bg-[#c8a24a] px-4 py-1.5 text-[10px] font-bold text-[#0f0d0b]">
+              Ver horários livres
+            </span>
+          </div>
+          <div className="mx-auto h-28 w-9 overflow-hidden rounded-full border-2 border-[#2a251f]">
+            <div className="bb-pole h-full w-full" />
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-[#13110e] p-5">
+        <p className="font-serif text-base font-bold text-[#f3ece0]">Serviços</p>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {[
+            ["Corte", "R$ 45"],
+            ["Barba", "R$ 35"],
+            ["Combo", "R$ 75"],
+          ].map(([n, v]) => (
+            <div key={n} className="rounded-xl border border-[#f3ece0]/10 bg-[#181512] p-3">
+              <i className="block h-5 w-5 rounded-full bg-[#c8a24a]/80" />
+              <p className="mt-2 text-[10px] font-bold text-[#f3ece0]">{n}</p>
+              <p className="text-[10px] font-bold text-[#c8a24a]">{v}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-[#0f0d0b] p-5">
+        <p className="font-serif text-base font-bold text-[#f3ece0]">Agenda de hoje</p>
+        <div className="mt-3 grid grid-cols-[34px_repeat(3,1fr)] gap-1.5 text-center text-[9px] font-bold">
+          <span />
+          {["Rafa", "Diego", "Léo"].map((b) => (
+            <span key={b} className="text-[#f3ece0]/70">
+              {b}
+            </span>
+          ))}
+          {horas.map((h, r) => (
+            <div key={h} className="contents">
+              <span className="self-center text-left font-mono text-[#f3ece0]/50">{h}</span>
+              {celulas[r].map((c, i) =>
+                c === "l" ? (
+                  <span key={i} className="rounded-md border border-[#c8a24a]/50 bg-[#c8a24a]/10 py-2 text-[#c8a24a]">
+                    Livre
+                  </span>
+                ) : (
+                  <span
+                    key={i}
+                    className="rounded-md border border-[#f3ece0]/10 bg-[repeating-linear-gradient(135deg,rgba(243,236,224,.08)_0_4px,transparent_4px_8px)] py-2 text-[#f3ece0]/50"
+                  >
+                    Ocupado
+                  </span>
+                ),
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-[#13110e] p-5">
+        <p className="font-serif text-base font-bold text-[#f3ece0]">Estilos</p>
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {["from-[#2a251f] to-[#c8a24a]/40", "from-[#c8a24a]/50 to-[#1c1814]", "from-[#1c1814] to-[#f3ece0]/25"].map((c) => (
+            <div key={c} className={`aspect-square rounded-lg bg-gradient-to-br ${c}`} />
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-[#c8a24a] p-6 text-center text-[#0f0d0b]">
+        <p className="font-serif text-lg font-bold">Seu horário está esperando.</p>
+        <span className="mt-3 inline-block rounded-full bg-[#0f0d0b] px-5 py-2 text-[11px] font-bold text-[#c8a24a]">
+          Agendar agora
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function Modelos() {
-  const destaque = MODELOS.find((m) => m.disponivel);
+  const disponiveis = MODELOS.filter((m) => m.disponivel);
   const emBreve = MODELOS.filter((m) => !m.disponivel);
+  const [slugAtivo, setSlugAtivo] = useState(disponiveis[0]?.slug ?? "");
+  const destaque = disponiveis.find((m) => m.slug === slugAtivo) ?? disponiveis[0];
   const [copiado, setCopiado] = useState(false);
+
+  function escolherModelo(slug: string) {
+    setSlugAtivo(slug);
+    setCopiado(false);
+  }
+
+  /** Setas, Home e End trocam de modelo, como em qualquer grupo de abas. */
+  function aoTeclarNasAbas(e: KeyboardEvent<HTMLButtonElement>, indice: number) {
+    const teclas: Record<string, number> = {
+      ArrowRight: (indice + 1) % disponiveis.length,
+      ArrowLeft: (indice - 1 + disponiveis.length) % disponiveis.length,
+      Home: 0,
+      End: disponiveis.length - 1,
+    };
+    const destino = teclas[e.key];
+    if (destino === undefined) return;
+    e.preventDefault();
+    escolherModelo(disponiveis[destino].slug);
+    document.getElementById(`aba-modelo-${disponiveis[destino].slug}`)?.focus();
+  }
 
   async function copiarLink() {
     if (!destaque) return;
@@ -146,8 +262,42 @@ export default function Modelos() {
           </p>
         </div>
 
+        {disponiveis.length > 1 && (
+          <div role="tablist" aria-label="Modelos de landing page disponíveis" className="mt-12 flex flex-wrap gap-2">
+            {disponiveis.map((m, i) => {
+              const ativo = m.slug === destaque?.slug;
+              return (
+                <button
+                  key={m.slug}
+                  id={`aba-modelo-${m.slug}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={ativo}
+                  aria-controls="painel-modelo"
+                  tabIndex={ativo ? 0 : -1}
+                  onClick={() => escolherModelo(m.slug)}
+                  onKeyDown={(e) => aoTeclarNasAbas(e, i)}
+                  className={`inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-bold outline-none transition-all focus-visible:ring-2 focus-visible:ring-brand-orange ${
+                    ativo
+                      ? "border-brand-orange bg-brand-orange text-white shadow-[0_0_30px_rgba(255,106,0,.25)]"
+                      : "border-white/15 text-white/65 hover:border-white/40 hover:text-white"
+                  }`}
+                >
+                  <Scissors className="h-4 w-4" aria-hidden="true" />
+                  {m.segmento}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {destaque && (
-          <div className="mt-14 grid gap-8 overflow-hidden rounded-[2rem] border border-brand-orange/30 bg-gradient-to-br from-brand-orange/10 via-white/[.02] to-transparent p-6 md:grid-cols-[1fr_1.05fr] md:items-center md:gap-12 md:p-10">
+          <div
+            id="painel-modelo"
+            role={disponiveis.length > 1 ? "tabpanel" : undefined}
+            aria-labelledby={disponiveis.length > 1 ? `aba-modelo-${destaque.slug}` : undefined}
+            className={`${disponiveis.length > 1 ? "mt-4" : "mt-14"} grid gap-8 overflow-hidden rounded-[2rem] border border-brand-orange/30 bg-gradient-to-br from-brand-orange/10 via-white/[.02] to-transparent p-6 md:grid-cols-[1fr_1.05fr] md:items-center md:gap-12 md:p-10`}
+          >
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
@@ -169,7 +319,7 @@ export default function Modelos() {
               <p className="mt-4 max-w-md text-sm leading-6 text-white/60">{destaque.descricao}</p>
 
               <ul className="mt-6 space-y-2.5">
-                {O_QUE_TEM.map((item) => (
+                {(destaque.destaques ?? []).map((item) => (
                   <li key={item} className="flex items-start gap-3 text-sm text-white/75">
                     <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-brand-orange/20 text-brand-orange">
                       <Check className="h-3 w-3" aria-hidden="true" />
@@ -243,7 +393,7 @@ export default function Modelos() {
                   </span>
                 </div>
                 <div className="relative h-[360px] overflow-hidden md:h-[430px]">
-                  <MiniSite />
+                  {destaque.slug === "barbearia" ? <MiniSiteBarbearia /> : <MiniSite />}
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/70 to-transparent px-4 pb-4 pt-16">
                     <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-black opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                       Clique para abrir o modelo <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />

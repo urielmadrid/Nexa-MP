@@ -28,7 +28,7 @@ Os preços e escopos acima são os que constam no projeto e podem ser alterados 
 - Site: /
 - Serviços: /#servicos
 - Como funciona: /#como-funciona
-- Modelos de landing page: /#modelos (modelos de demonstração em /m/salao)
+- Modelos de landing page: /#modelos (modelos de demonstração em /m/salao e /m/barbearia)
 - Planos: /#planos
 - Contato: /#contato
 - E-mail: contato@nexa-mp.com.br

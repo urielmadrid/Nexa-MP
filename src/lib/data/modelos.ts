@@ -6,6 +6,8 @@ export type Modelo = {
   descricao: string;
   /** false = aparece como "Em breve" e a URL ainda não existe. */
   disponivel: boolean;
+  /** Pontos fortes mostrados na seção Modelos do site (só para os modelos disponíveis). */
+  destaques?: string[];
 };
 
 /**
@@ -23,6 +25,26 @@ export const MODELOS: Modelo[] = [
     descricao:
       "Uma landing page completa: apresentação, serviços, como agendar, galeria, perguntas frequentes e contato. Role e teste os botões como se fosse o site de um cliente.",
     disponivel: true,
+    destaques: [
+      "Apresentação do negócio logo no topo",
+      "Serviços explicados de forma simples",
+      "Simulador de agendamento",
+      "Galeria, perguntas frequentes e contato",
+    ],
+  },
+  {
+    slug: "barbearia",
+    segmento: "Barbearias",
+    titulo: "Landing page para barbearia",
+    descricao:
+      "Uma landing page completa com agenda interativa: o cliente escolhe o serviço e o dia e vê quais horários estão livres e quais já estão ocupados, por barbeiro.",
+    disponivel: true,
+    destaques: [
+      "Agenda com horários livres e ocupados por barbeiro",
+      "Serviços com duração e valor",
+      "Equipe, estilos, perguntas frequentes e localização",
+      "Confirmação do horário em poucos toques",
+    ],
   },
   {
     slug: "academia",
