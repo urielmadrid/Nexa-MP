@@ -1,4 +1,4 @@
-import { PLANOS } from "@/src/lib/data/planos";
+import { PLANOS, PLANOS_TRAFEGO, TRAFEGO_PERSONALIZADO, formatarValor } from "@/src/lib/data/planos";
 
 /**
  * Dados e regras do assistente de mensagem do Contato.
@@ -53,6 +53,8 @@ export const PLANO_INDICACAO = "indicacao";
 export const OPCOES_PLANO: Opcao[] = [
   { id: PLANO_INDICACAO, rotulo: "Quero uma indicação", dica: "A Nexa MP me ajuda a escolher" },
   ...PLANOS.map((p) => ({ id: p.id, rotulo: p.nome, dica: p.precoOriginal ? `${p.preco}, ${p.periodo} (${p.selo ?? "promoção"})` : `${p.preco}, ${p.periodo}` })),
+  ...PLANOS_TRAFEGO.map((p) => ({ id: p.id, rotulo: p.nome, dica: `${p.preco}, ${p.periodo} (gestão e verba juntas)` })),
+  { id: TRAFEGO_PERSONALIZADO.id, rotulo: TRAFEGO_PERSONALIZADO.nome, dica: "Você diz quanto quer investir por mês" },
 ];
 
 /** Como a pessoa prefere ser respondida. */
@@ -73,6 +75,8 @@ export type RespostasContato = {
   retorno: string;
   contato: string;
   detalhes: string;
+  /** Valor mensal do tráfego pago quando o plano é "outro valor" (em reais; 0 = não informado). */
+  valorTrafego: number;
   /** A pessoa marcou "li e aceito" (Política de Privacidade e Termos de Uso). */
   aceite: boolean;
 };
@@ -87,6 +91,7 @@ export const RESPOSTAS_VAZIAS: RespostasContato = {
   retorno: "qualquer",
   contato: "",
   detalhes: "",
+  valorTrafego: 0,
   aceite: false,
 };
 
@@ -104,8 +109,15 @@ function textoDe(opcoes: Opcao[], id: string): string {
 }
 
 /** Texto do plano escolhido, com preço e período vindos de planos.ts. */
-export function descreverPlano(id: string): string {
+export function descreverPlano(id: string, valorTrafego = 0): string {
   if (id === PLANO_INDICACAO) return "ainda não escolhi, gostaria de uma indicação";
+  if (id === TRAFEGO_PERSONALIZADO.id) {
+    return valorTrafego > 0
+      ? `Tráfego pago, com valor personalizado de ${formatarValor(valorTrafego)} por mês (gestão e verba de anúncios juntas)`
+      : "Tráfego pago, com valor personalizado (ainda vou informar o valor)";
+  }
+  const trafego = PLANOS_TRAFEGO.find((p) => p.id === id);
+  if (trafego) return `${trafego.nome} (${trafego.periodo}, gestão e verba de anúncios juntas)`;
   const plano = PLANOS.find((p) => p.id === id);
   if (!plano) return "ainda não escolhi, gostaria de uma indicação";
   if (plano.precoOriginal) return `${plano.nome} (${plano.preco} na ${plano.selo ?? "promoção"}, de ${plano.precoOriginal}, ${plano.periodo})`;
@@ -124,7 +136,7 @@ export function montarMensagem(r: RespostasContato): string {
     ["Ramo de atuação", r.ramo.trim()],
     ["Preciso de", listar(necessidades)],
     ["Momento", momento],
-    ["Plano de interesse", descreverPlano(r.plano)],
+    ["Plano de interesse", descreverPlano(r.plano, r.valorTrafego)],
     ["Prefiro retorno por", retorno],
     ["Meu contato", r.contato.trim()],
     ["Detalhes", r.detalhes.trim()],

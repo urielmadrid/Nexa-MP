@@ -21,6 +21,7 @@ Unir diferentes frentes digitais em uma estratégia coerente, com comunicação 
 - Essencial — R$ 800 por mês
 - Presença Completa — R$ 1.500 por mês
 - Crescimento Contínuo — R$ 3.000 por mês
+- Tráfego pago (gestão e verba de anúncios juntas, mesmo serviço em todas as faixas) — R$ 500, R$ 1.000 ou R$ 1.500 por mês, ou outro valor combinado com a Nexa MP
 
 Os preços e escopos acima são os que constam no projeto e podem ser alterados pela empresa.
 
@@ -29,7 +30,9 @@ Os preços e escopos acima são os que constam no projeto e podem ser alterados 
 - Serviços: /#servicos
 - Como funciona: /#como-funciona
 - Modelos de landing page: /#modelos (modelos de demonstração em /m/salao e /m/barbearia)
+- Tráfego pago: /#trafego-pago
 - Planos: /#planos
+- Planos de tráfego pago: /#planos-trafego
 - Sobre a Nexa MP: /sobre
 - Contato: /#contato
 - E-mail: contato@nexa-mp.com.br

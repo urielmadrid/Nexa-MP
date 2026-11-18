@@ -3,6 +3,7 @@ import Footer from "@/src/components/layout/Footer";
 import Hero from "@/src/components/sections/Hero";
 import Problema from "@/src/components/sections/Problema";
 import Servicos from "@/src/components/sections/Servicos";
+import TrafegoPago from "@/src/components/sections/TrafegoPago";
 import Diferenciais from "@/src/components/sections/Diferenciais";
 import ComoFunciona from "@/src/components/sections/ComoFunciona";
 import Modelos from "@/src/components/sections/Modelos";
@@ -22,6 +23,7 @@ export default function Home() {
         <Hero />
         <Problema />
         <Servicos />
+        <TrafegoPago />
         <Diferenciais />
         <ComoFunciona />
         <Modelos />

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight, Code2, Layers3, MousePointer2, Sparkles, Zap, Globe2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { PLANOS } from "@/src/lib/data/planos";
+import { PLANOS, PLANOS_TRAFEGO } from "@/src/lib/data/planos";
 
 const FRAGMENTS = [
   { x: 8, y: 20, w: 92, h: 12, d: 0 }, { x: 78, y: 12, w: 56, h: 56, d: 90 },
@@ -78,6 +78,11 @@ export default function Hero() {
           <h1 className="nexa-display max-w-5xl text-[clamp(4rem,12vw,9.5rem)] font-black leading-[.77]"><span className="block">NEXA</span><span className="block text-brand-orange">MP<span className="text-white/15">.</span></span><span className="sr-only"> — estratégia digital: sites, conteúdo, tráfego pago e automação</span></h1>
           <p className="mt-8 max-w-xl text-lg leading-8 text-white/60 md:text-xl">Sites, conteúdo, tráfego pago e automação trabalhando juntos para a sua empresa ser encontrada, entendida e escolhida.</p>
           <div className="mt-8 flex flex-wrap gap-3"><Link href="#contato" className="cta-press group inline-flex items-center gap-3 rounded-full bg-brand-orange px-6 py-3.5 text-sm font-bold text-white shadow-[0_0_50px_rgba(255,106,0,.2)] transition-all hover:-translate-y-1 hover:bg-white hover:text-black">Começar meu projeto <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></Link><Link href="#planos" className="cta-press inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[.04] px-5 py-3.5 text-sm font-semibold text-white/75 transition-all hover:border-white/30 hover:text-white"><ArrowDownRight className="h-4 w-4 text-brand-orange" /> Ver planos e valores</Link></div>
+          <a href="#planos-trafego" className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-brand-orange/40 bg-brand-orange/10 px-4 py-2 text-xs font-bold text-brand-orange outline-none transition-colors hover:bg-brand-orange hover:text-white focus-visible:ring-2 focus-visible:ring-brand-orange">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-current" aria-hidden="true" />
+            Novo: planos de tráfego pago a partir de {PLANOS_TRAFEGO[0].preco} {PLANOS_TRAFEGO[0].periodo}
+            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </a>
           <p className="mt-5 max-w-md text-xs leading-5 text-white/40">Planos a partir de {PLANOS[0].preco} ({PLANOS[0].periodo}). Conversar não gera cobrança — o atendimento inicial acontece pelo WhatsApp, pelo e-mail ou pelo Instagram @nexamp_.</p>
         </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronsRight, Clock, PersonStanding, X } from "lucide-react";
 import Button from "@/src/components/ui/Button";
@@ -8,6 +8,13 @@ import { PLANOS, recursosAusentes, type Plano } from "@/src/lib/data/planos";
 import PlanosGuia from "@/src/components/sections/PlanosGuia";
 import PlanosComparativo from "@/src/components/sections/PlanosComparativo";
 import PlanosFaq from "@/src/components/sections/PlanosFaq";
+import PlanosTrafego from "@/src/components/sections/PlanosTrafego";
+
+type Aba = "presenca" | "trafego";
+const ABAS: { id: Aba; rotulo: string; novo?: boolean }[] = [
+  { id: "presenca", rotulo: "Sites e conteúdo" },
+  { id: "trafego", rotulo: "Tráfego pago", novo: true },
+];
 
 const FLOOR_ORDER = [3, 2, 1, 0]; // do topo (cobertura) até o térreo — índices em PLANOS
 const FLOOR_LABELS = ["Cobertura", "2º andar", "1º andar", "Térreo"];
@@ -145,6 +152,33 @@ export default function Planos() {
 
   const [selecionado, setSelecionado] = useState(2); // começa na "Presença Completa" (recomendado)
   const [direction, setDirection] = useState(0);
+  const [aba, setAba] = useState<Aba>("presenca");
+
+  // Links como /#planos-trafego (Hero, seção de tráfego pago) abrem direto a aba de tráfego pago.
+  useEffect(() => {
+    function abrirPelaUrl() {
+      if (window.location.hash !== "#planos-trafego") return;
+      setAba("trafego");
+      document.getElementById("planos-trafego")?.scrollIntoView({ behavior: instante ? "auto" : "smooth", block: "start" });
+    }
+    abrirPelaUrl();
+    window.addEventListener("hashchange", abrirPelaUrl);
+    return () => window.removeEventListener("hashchange", abrirPelaUrl);
+  }, [instante]);
+
+  /** Setas, Home e End trocam de aba (padrão de abas acessíveis). */
+  function aoTeclarNasAbas(e: KeyboardEvent<HTMLDivElement>) {
+    const atual = ABAS.findIndex((a) => a.id === aba);
+    let destino = -1;
+    if (e.key === "ArrowRight") destino = (atual + 1) % ABAS.length;
+    else if (e.key === "ArrowLeft") destino = (atual - 1 + ABAS.length) % ABAS.length;
+    else if (e.key === "Home") destino = 0;
+    else if (e.key === "End") destino = ABAS.length - 1;
+    if (destino < 0) return;
+    e.preventDefault();
+    setAba(ABAS[destino].id);
+    document.getElementById(`aba-${ABAS[destino].id}`)?.focus();
+  }
 
   const plano = PLANOS[selecionado];
   const visualIndex = FLOOR_ORDER.indexOf(selecionado);
@@ -180,9 +214,54 @@ export default function Planos() {
             </h2>
           </div>
           <p className="max-w-sm text-sm leading-6 text-white/45">
-            Sem taxa escondida. Suba de andar quando fizer sentido pra você.
+            {aba === "trafego"
+              ? "Sem taxa escondida. Os valores são os que aparecem em cada faixa."
+              : "Sem taxa escondida. Suba de andar quando fizer sentido pra você."}
           </p>
         </div>
+
+        {/* Abas: planos de sites e conteúdo, e planos de tráfego pago */}
+        <div id="planos-trafego" className="mt-10 scroll-mt-24">
+          <div
+            role="tablist"
+            aria-label="Tipo de plano"
+            onKeyDown={aoTeclarNasAbas}
+            className="inline-flex gap-1 rounded-full border border-white/10 bg-white/[.04] p-1"
+          >
+            {ABAS.map((a) => (
+              <button
+                key={a.id}
+                id={`aba-${a.id}`}
+                type="button"
+                role="tab"
+                aria-selected={aba === a.id}
+                aria-controls={`painel-${a.id}`}
+                tabIndex={aba === a.id ? 0 : -1}
+                onClick={() => setAba(a.id)}
+                className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-orange ${
+                  aba === a.id ? "bg-brand-orange text-brand-white" : "text-white/60 hover:text-white"
+                }`}
+              >
+                {a.rotulo}
+                {a.novo && (
+                  <span
+                    className={`rounded-full px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest ${
+                      aba === a.id ? "bg-white text-brand-black" : "bg-brand-orange/20 text-brand-orange"
+                    }`}
+                  >
+                    novo
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div id="painel-trafego" role="tabpanel" aria-labelledby="aba-trafego" hidden={aba !== "trafego"} className="mt-12">
+          <PlanosTrafego />
+        </div>
+
+        <div id="painel-presenca" role="tabpanel" aria-labelledby="aba-presenca" hidden={aba !== "presenca"}>
 
         {/* Avisa leitores de tela quando o plano muda */}
         <p className="sr-only" aria-live="polite">
@@ -347,6 +426,7 @@ export default function Planos() {
         <PlanosGuia onResultado={escolherPorId} />
 
         <PlanosFaq />
+        </div>
 
         <div className="mx-auto mt-16 flex max-w-2xl flex-col items-center gap-3 text-center">
           <p className="text-sm text-white/60">Prefere conversar antes de decidir? O primeiro contato não gera cobrança.</p>

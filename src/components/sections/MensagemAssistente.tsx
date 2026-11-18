@@ -5,7 +5,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Copy, Mail, MessageCircle, RotateCcw } from "lucide-react";
-import { PLANOS } from "@/src/lib/data/planos";
+import { TRAFEGO_PERSONALIZADO, formatarValor, lerValorTrafego, planoExiste } from "@/src/lib/data/planos";
 import { CONTATO, linkEmail, linkWhatsApp } from "@/src/lib/data/contato";
 import {
   MOMENTOS,
@@ -107,6 +107,7 @@ export default function MensagemAssistente() {
   const reduzir = useReducedMotion();
   const searchParams = useSearchParams();
   const planoParam = searchParams.get("plano");
+  const valorParam = searchParams.get("valor");
 
   const [etapa, setEtapa] = useState(0);
   const [direcao, setDirecao] = useState(1);
@@ -122,11 +123,16 @@ export default function MensagemAssistente() {
   const timerCopiaRef = useRef<number | undefined>(undefined);
 
   // Vindo de um botão de plano (/?plano=essencial#contato), o plano já aparece marcado.
+  // No tráfego pago com outro valor, o valor vem junto (/?plano=trafego-personalizado&valor=5000#contato).
   useEffect(() => {
-    if (planoParam && PLANOS.some((p) => p.id === planoParam)) {
-      setR((atual) => ({ ...atual, plano: planoParam }));
+    if (planoParam && planoExiste(planoParam)) {
+      setR((atual) => ({
+        ...atual,
+        plano: planoParam,
+        valorTrafego: planoParam === TRAFEGO_PERSONALIZADO.id ? lerValorTrafego(valorParam) : atual.valorTrafego,
+      }));
     }
-  }, [planoParam]);
+  }, [planoParam, valorParam]);
 
   // Ao trocar de etapa, o foco vai para o título (leitor de tela anuncia; teclado continua de onde faz sentido).
   useEffect(() => {
@@ -160,6 +166,9 @@ export default function MensagemAssistente() {
   function validar(): string {
     if (etapa === 0 && r.necessidades.length === 0) return "Marque pelo menos uma opção para continuar.";
     if (etapa === 1 && !r.momento) return "Escolha uma opção para continuar.";
+    if (etapa === 2 && r.plano === TRAFEGO_PERSONALIZADO.id && r.valorTrafego <= 0) {
+      return "Informe quanto você quer investir por mês, ou escolha outra opção.";
+    }
     if (etapa === 3) {
       if (!r.nome.trim()) return "Informe o seu nome para continuar.";
       const problemaContato = problemaNoContato(r.retorno, r.contato);
@@ -193,7 +202,12 @@ export default function MensagemAssistente() {
   }
 
   function recomecar() {
-    setR({ ...RESPOSTAS_VAZIAS, plano: planoParam && PLANOS.some((p) => p.id === planoParam) ? planoParam : RESPOSTAS_VAZIAS.plano });
+    const planoInicial = planoParam && planoExiste(planoParam) ? planoParam : RESPOSTAS_VAZIAS.plano;
+    setR({
+      ...RESPOSTAS_VAZIAS,
+      plano: planoInicial,
+      valorTrafego: planoInicial === TRAFEGO_PERSONALIZADO.id ? lerValorTrafego(valorParam) : 0,
+    });
     setMensagem("");
     setDirecao(-1);
     setErro("");
@@ -331,6 +345,27 @@ export default function MensagemAssistente() {
                     selecionados={[r.plano]}
                     onToggle={(id) => atualizar("plano", id)}
                   />
+                  {r.plano === TRAFEGO_PERSONALIZADO.id && (
+                    <div className="mt-4 rounded-2xl border border-brand-orange/30 bg-brand-orange/[.06] p-4">
+                      <label htmlFor="assistente-valor-trafego" className="block text-sm font-semibold text-white">
+                        Quanto você quer investir por mês? (R$)
+                      </label>
+                      <input
+                        id="assistente-valor-trafego"
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="off"
+                        placeholder="Ex.: 5.000"
+                        aria-describedby="assistente-valor-trafego-dica"
+                        value={r.valorTrafego > 0 ? r.valorTrafego.toLocaleString("pt-BR") : ""}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => atualizar("valorTrafego", lerValorTrafego(e.target.value))}
+                        className={CAMPO}
+                      />
+                      <p id="assistente-valor-trafego-dica" className="mt-2 text-xs leading-5 text-white/45">
+                        {r.valorTrafego > 0 ? `${formatarValor(r.valorTrafego)} por mês, ` : ""}gestão e verba de anúncios juntas. A Nexa MP confirma o valor com você na conversa.
+                      </p>
+                    </div>
+                  )}
                   <p className="mt-4 text-xs leading-5 text-white/40">
                     Quer comparar antes de escolher?{" "}
                     <a
