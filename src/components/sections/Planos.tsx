@@ -9,7 +9,6 @@ import PlanosGuia from "@/src/components/sections/PlanosGuia";
 import PlanosComparativo from "@/src/components/sections/PlanosComparativo";
 import PlanosFaq from "@/src/components/sections/PlanosFaq";
 import PlanosTrafego from "@/src/components/sections/PlanosTrafego";
-import ContratarPlano from "@/src/components/sections/ContratarPlano";
 import { abrirContratacao } from "@/src/lib/contratarPlano";
 
 type Aba = "presenca" | "trafego";
@@ -437,9 +436,6 @@ export default function Planos() {
           </Button>
         </div>
       </div>
-
-      {/* Janelinha "Quero este plano": montada uma vez; todos os botões de plano do site a abrem. */}
-      <ContratarPlano />
     </section>
   );
 }

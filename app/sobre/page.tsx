@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import Header from "@/src/components/layout/Header";
 import Footer from "@/src/components/layout/Footer";
@@ -9,6 +8,7 @@ import { PROCESSO } from "@/src/lib/data/processo";
 import { SERVICOS } from "@/src/lib/data/servicos";
 import { SOBRE, fatosDaNexa } from "@/src/lib/data/sobre";
 import { DESCRICAO_SITE, NOME_SITE, SITE_URL } from "@/src/lib/site";
+import Link from "next/link";
 
 const TITULO_PAGINA = "Sobre a Nexa MP";
 const DESCRICAO_PAGINA =
