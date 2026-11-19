@@ -7,7 +7,7 @@
  */
 export const BLACK_FRIDAY = {
   /** true = campanha no ar. false = nada da campanha aparece no site. */
-  ativa: true,
+  ativa: false,
 
   /** Plano que entra na campanha (id em src/lib/data/planos.ts). */
   planoId: "landing-avulsa",
