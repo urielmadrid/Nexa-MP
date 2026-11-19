@@ -9,6 +9,8 @@ import PlanosGuia from "@/src/components/sections/PlanosGuia";
 import PlanosComparativo from "@/src/components/sections/PlanosComparativo";
 import PlanosFaq from "@/src/components/sections/PlanosFaq";
 import PlanosTrafego from "@/src/components/sections/PlanosTrafego";
+import ContratarPlano from "@/src/components/sections/ContratarPlano";
+import { abrirContratacao } from "@/src/lib/contratarPlano";
 
 type Aba = "presenca" | "trafego";
 const ABAS: { id: Aba; rotulo: string; novo?: boolean }[] = [
@@ -104,7 +106,7 @@ function PainelPlano({ plano }: { plano: Plano }) {
       )}
 
       <div className="mt-auto pt-8">
-        <Button href={`/?plano=${plano.id}#contato`} showArrow className="w-full justify-center">
+        <Button onClick={() => abrirContratacao(plano.id)} showArrow className="w-full justify-center">
           Quero o plano {plano.nome}
         </Button>
         <p className="mt-3 text-center text-xs text-white/40">Clicar aqui só inicia uma conversa — nenhuma cobrança.</p>
@@ -435,6 +437,9 @@ export default function Planos() {
           </Button>
         </div>
       </div>
+
+      {/* Janelinha "Quero este plano": montada uma vez; todos os botões de plano do site a abrem. */}
+      <ContratarPlano />
     </section>
   );
 }

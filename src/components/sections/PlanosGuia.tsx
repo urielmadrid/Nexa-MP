@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Button from "@/src/components/ui/Button";
 import { PLANOS, recursosAusentes } from "@/src/lib/data/planos";
+import { abrirContratacao } from "@/src/lib/contratarPlano";
 
 /**
  * Guia de até 3 perguntas ("Em qual andar você está?"). Sem IA: é uma árvore simples
@@ -341,7 +342,7 @@ export default function PlanosGuia({ onResultado }: { onResultado: (planoId: str
                     )}
 
                     <div className="mt-7 flex flex-wrap items-center gap-3">
-                      <Button href={`/?plano=${indicado.id}#contato`} showArrow>
+                      <Button onClick={() => abrirContratacao(indicado.id)} showArrow>
                         Quero o plano {indicado.nome}
                       </Button>
                       <a

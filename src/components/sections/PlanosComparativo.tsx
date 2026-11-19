@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { PLANOS, RECURSOS, type Plano } from "@/src/lib/data/planos";
+import { aoClicarContratar } from "@/src/lib/contratarPlano";
 
 const ICONES: Record<string, LucideIcon> = {
   "Landing page profissional": LayoutTemplate,
@@ -305,6 +306,7 @@ export default function PlanosComparativo() {
                       >
                         <a
                           href={`/?plano=${p.id}#contato`}
+                          onClick={(e) => aoClicarContratar(e, p.id)}
                           className={`cta-press inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-orange ${
                             p.destaque === "popular"
                               ? "bg-brand-orange text-white hover:bg-white hover:text-black"
@@ -377,6 +379,7 @@ export default function PlanosComparativo() {
 
                     <a
                       href={`/?plano=${para.id}#contato`}
+                      onClick={(e) => aoClicarContratar(e, para.id)}
                       className="cta-press mt-auto inline-flex w-fit items-center gap-2 pt-6 text-xs font-bold text-brand-orange outline-none transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-brand-orange"
                     >
                       Quero o plano {para.nome} <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

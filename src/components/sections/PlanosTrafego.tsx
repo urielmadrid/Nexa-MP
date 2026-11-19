@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { abrirContratacao, aoClicarContratar } from "@/src/lib/contratarPlano";
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
@@ -133,7 +133,6 @@ const ESTILO = `
 
 export default function PlanosTrafego() {
   const raiz = useRef<HTMLDivElement>(null);
-  const router = useRouter();
   const [valor, setValor] = useState(0);
 
   useEffect(() => {
@@ -164,7 +163,7 @@ export default function PlanosTrafego() {
   function pedirProposta(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (valor <= 0) return;
-    router.push(`/?plano=${TRAFEGO_PERSONALIZADO.id}&valor=${valor}#contato`);
+    abrirContratacao(TRAFEGO_PERSONALIZADO.id, valor);
   }
 
   return (
@@ -207,7 +206,7 @@ export default function PlanosTrafego() {
                 </li>
               ))}
             </ul>
-            <Link href={`/?plano=${plano.id}#contato`} className="pt-botao pt-botao-p">
+            <Link href={`/?plano=${plano.id}#contato`} onClick={(e) => aoClicarContratar(e, plano.id)} className="pt-botao pt-botao-p">
               Quero a faixa de {plano.preco}
             </Link>
           </li>

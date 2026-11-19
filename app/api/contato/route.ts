@@ -73,10 +73,13 @@ export async function POST(request: Request) {
   const empresa = texto(dados.empresa, 80);
   const contato = texto(dados.contato, 120);
   const mensagem = texto(dados.mensagem, 3000);
+  // Usado pela janelinha dos planos (ex.: "Quero o plano Essencial"), que não pede nome.
+  const pedido = umaLinha(texto(dados.assunto, 100));
 
   // O aceite da Política de Privacidade é obrigatório e fica registrado no e-mail recebido.
   if (dados.aceite !== true) return resposta({ erro: "aceite" }, 400);
-  if (!nome || !contato || mensagem.length < 20) return resposta({ erro: "dados" }, 400);
+  // O nome é opcional quando o pedido vem com assunto (janelinha dos planos).
+  if ((!nome && !pedido) || !contato || mensagem.length < 20) return resposta({ erro: "dados" }, 400);
 
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "desconhecido";
   if (excedeuLimite(ip)) return resposta({ erro: "limite" }, 429);
@@ -103,14 +106,14 @@ export async function POST(request: Request) {
     socketTimeout: 15_000,
   });
 
-  const assunto = umaLinha(`Contato pelo site da Nexa MP: ${empresa || nome}`).slice(0, 150);
+  const assunto = umaLinha(`Contato pelo site da Nexa MP: ${empresa || nome || pedido}`).slice(0, 150);
   const quando = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
 
   try {
     await transporte.sendMail({
       from: { name: "Site Nexa MP", address: usuario },
       to: destino,
-      replyTo: emailDaPessoa ? { name: umaLinha(nome), address: emailDaPessoa } : undefined,
+      replyTo: emailDaPessoa ? (nome ? { name: umaLinha(nome), address: emailDaPessoa } : emailDaPessoa) : undefined,
       subject: assunto,
       text: `${mensagem}\n\n--\nEnviado pelo formulário do site em ${quando} (horário de Brasília).\nContato informado: ${umaLinha(contato)}\nAceite da Política de Privacidade e dos Termos: sim (versão ${VERSAO_POLITICA}).`,
     });

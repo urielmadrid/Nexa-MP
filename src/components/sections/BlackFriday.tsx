@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { BLACK_FRIDAY, campanhaValida, descontoPercentual, formatarReais } from "@/src/lib/data/blackFriday";
 import { PLANOS } from "@/src/lib/data/planos";
+import { aoClicarContratar } from "@/src/lib/contratarPlano";
 
 /**
  * Tela da Black Friday, logo antes dos planos.
@@ -235,7 +236,7 @@ export default function BlackFriday() {
             </ul>
 
             <div className="bf-acoes">
-              <Link href={`/?plano=${plano.id}#contato`} className="bf-botao bf-botao-p">
+              <Link href={`/?plano=${plano.id}#contato`} onClick={(e) => aoClicarContratar(e, plano.id)} className="bf-botao bf-botao-p">
                 Quero a landing page por {por}
               </Link>
               <a href="#planos" className="bf-botao bf-botao-o">
