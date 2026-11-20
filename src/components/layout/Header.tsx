@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
+import SeletorModo from "@/src/components/ui/SeletorModo";
 
 const NAV_LINKS = [
   { label: "Serviços", href: "/#servicos" },
@@ -21,21 +22,27 @@ export default function Header() {
           <span className="text-lg font-black tracking-tight">Nexa<span className="text-brand-orange">MP</span></span>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex" aria-label="Navegação principal">
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Navegação principal">
           {NAV_LINKS.map((link) => <a key={link.href} href={link.href} className="text-[13px] font-medium text-white/55 transition-colors hover:text-white">{link.label}</a>)}
         </nav>
 
-        <a href="/#contato" className="hidden items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-black transition-all hover:bg-brand-orange hover:text-white md:inline-flex">
+        <div className="hidden lg:block"><SeletorModo /></div>
+
+        <a href="/#contato" className="hidden items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-black transition-all hover:bg-brand-orange hover:text-white lg:inline-flex">
           Começar um projeto <ArrowUpRight className="h-3.5 w-3.5" />
         </a>
 
-        <button type="button" onClick={() => setOpen(v => !v)} className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 text-white md:hidden" aria-label={open ? "Fechar menu" : "Abrir menu"} aria-expanded={open}>
+        <button type="button" onClick={() => setOpen(v => !v)} className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 text-white lg:hidden" aria-label={open ? "Fechar menu" : "Abrir menu"} aria-expanded={open}>
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {open && <nav className="mx-auto mt-2 max-w-7xl rounded-2xl border border-white/10 bg-[#0b0b0b]/95 p-3 backdrop-blur-xl md:hidden" aria-label="Navegação móvel">
+      {open && <nav className="mx-auto mt-2 max-w-7xl rounded-2xl border border-white/10 bg-[#0b0b0b]/95 p-3 backdrop-blur-xl lg:hidden" aria-label="Navegação móvel">
         {NAV_LINKS.map(link => <a key={link.href} href={link.href} onClick={() => setOpen(false)} className="block rounded-xl px-4 py-3 text-sm text-white/70 hover:bg-white/5 hover:text-white">{link.label}</a>)}
+        <div className="mt-2 flex items-center justify-between gap-3 rounded-xl px-4 py-2 text-sm text-white/70">
+          <span>Modo do site</span>
+          <SeletorModo />
+        </div>
         <a href="/#contato" onClick={() => setOpen(false)} className="mt-1 block rounded-xl bg-brand-orange px-4 py-3 text-center text-sm font-bold text-white">Começar um projeto</a>
       </nav>}
     </header>
