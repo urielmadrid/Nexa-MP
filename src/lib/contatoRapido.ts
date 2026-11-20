@@ -10,7 +10,7 @@ export type DetalheContato = {
   assunto: string;
   /** Complemento opcional para o texto da mensagem (hoje, só o diagnóstico). */
   detalhe?: string;
-  /** A janelinha marca true quando abriu. Se ninguém marcar, o botão leva ao formulário do Contato. */
+  /** A janelinha marca true quando abriu. Se ninguém marcar, o clique avisa no console do navegador. */
   tratado?: boolean;
 };
 
@@ -18,8 +18,8 @@ export function abrirContato(assunto: string, detalhe = ""): void {
   if (typeof window === "undefined") return;
   const detail: DetalheContato = { assunto, detalhe };
   window.dispatchEvent(new CustomEvent<DetalheContato>(EVENTO_CONTATO, { detail }));
-  // Se a janelinha não abriu (não está montada, ou o assunto não existe), leva ao formulário do Contato.
-  if (!detail.tratado) window.location.assign("/#contato");
+  // Diagnóstico: se ninguém respondeu ao evento, a janelinha não está montada (ou o assunto não existe).
+  if (!detail.tratado) console.warn(`[nexa] A janelinha de contato não respondeu ao clique (assunto: ${assunto}). Veja se app/layout.tsx monta <ContatoRapido />.`);
 }
 
 /**
