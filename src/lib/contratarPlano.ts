@@ -10,11 +10,17 @@ export type DetalheContratar = {
   planoId: string;
   /** Só no tráfego pago com outro valor: o valor mensal em reais. */
   valor?: number;
+  /** A janelinha marca true quando abriu. Se ninguém marcar, o botão leva ao formulário do Contato. */
+  tratado?: boolean;
 };
 
 export function abrirContratacao(planoId: string, valor = 0): void {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent<DetalheContratar>(EVENTO_CONTRATAR, { detail: { planoId, valor } }));
+  const detail: DetalheContratar = { planoId, valor };
+  window.dispatchEvent(new CustomEvent<DetalheContratar>(EVENTO_CONTRATAR, { detail }));
+  // Se a janelinha não abriu (não está montada, ou o plano não existe), o botão não pode ficar mudo:
+  // leva ao formulário do Contato, com o plano já marcado.
+  if (!detail.tratado) window.location.assign(`/?plano=${planoId}${valor > 0 ? `&valor=${valor}` : ""}#contato`);
 }
 
 /**
