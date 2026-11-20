@@ -72,6 +72,18 @@ export const ESTILO_JANELA_CONTATO = `
 .cp-pagar{margin-top:20px;padding:20px;border:1px solid rgba(255,106,0,.65);border-radius:20px;background:linear-gradient(160deg,rgba(255,106,0,.18),rgba(255,106,0,.04));box-shadow:0 0 40px rgba(255,106,0,.12)}
 .cp-pagar h3{margin:10px 0 0;font-size:19px;font-weight:800;color:#fff}
 .cp-pagar p{margin:6px 0 0;font-size:13px;line-height:1.55;color:rgba(255,255,255,.62)}
+.cp-maior{margin-top:16px;padding-top:16px;border-top:1px dashed rgba(255,255,255,.22)}
+.cp-maior strong{color:#fff}
+.cp-maior-linha{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.cp-valor{display:flex;align-items:center;flex:1 1 140px;min-width:0;border:1px solid rgba(255,255,255,.18);border-radius:12px;background:rgba(255,255,255,.05)}
+.cp-valor:focus-within{border-color:#ff6a00;box-shadow:0 0 0 3px rgba(255,106,0,.25)}
+.cp-valor span{padding-left:14px;font-weight:800;color:#ff6a00}
+.cp-valor input{width:100%;min-width:0;padding:13px 14px 13px 8px;border:0;background:transparent;color:#fff;font-family:inherit;font-size:16px;font-weight:700;outline:none}
+.cp-valor input::placeholder{color:rgba(255,255,255,.3)}
+.cp-maior .cp-botao{width:auto;flex:1 1 170px;margin-top:0}
+.cp-desativado{opacity:.45;cursor:not-allowed}
+.cp-desativado:hover{transform:none;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.18)}
+.cp-maior .cp-dica{margin-top:8px}
 .cp-botao svg{flex:none;width:16px;height:16px}
 .cp-separador{display:flex;align-items:center;gap:12px;margin:22px 0 14px;font-size:14px;font-weight:700;color:rgba(255,255,255,.85)}
 .cp-separador::before,.cp-separador::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.14)}

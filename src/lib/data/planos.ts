@@ -131,6 +131,18 @@ export const PLANOS_TRAFEGO: PlanoTrafego[] = TRAFEGO.faixas.map((valor) => ({
   periodo: TRAFEGO.periodo,
 }));
 
+/** Limite de dígitos do valor digitado (até R$ 9.999.999). */
+export const TRAFEGO_MAX_DIGITOS = 7;
+
+/** Converte o que a pessoa digitou em um valor em reais. Devolve 0 se não servir. */
+export function lerValorTrafego(texto: string | null | undefined): number {
+  // Ignora centavos ("5.000,50" vale 5000) para não multiplicar o valor por 100 sem querer.
+  const inteiro = (texto ?? "").split(",")[0];
+  const digitos = inteiro.replace(/\D/g, "").slice(0, TRAFEGO_MAX_DIGITOS);
+  const valor = Number(digitos);
+  return Number.isFinite(valor) && valor > 0 ? valor : 0;
+}
+
 /** O id existe em algum plano do site (presença digital ou tráfego pago)? */
 export function planoExiste(id: string | null | undefined): boolean {
   if (!id) return false;

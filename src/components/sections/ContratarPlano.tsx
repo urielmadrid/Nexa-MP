@@ -6,7 +6,8 @@ import type { ChangeEvent, FormEvent, MouseEvent } from "react";
 import { EVENTO_CONTRATAR, type DetalheContratar } from "@/src/lib/contratarPlano";
 import { linkEmail, linkWhatsApp } from "@/src/lib/data/contato";
 import { problemaNoContato } from "@/src/lib/data/mensagemContato";
-import { mensagemDoPlano, resumoDoPlano } from "@/src/lib/data/mensagensPlanos";
+import { mensagemDoPlano, resumoDoPlano, tituloDoPedido } from "@/src/lib/data/mensagensPlanos";
+import { PLANOS_TRAFEGO, formatarValor, lerValorTrafego } from "@/src/lib/data/planos";
 import { linkDePagamento } from "@/src/lib/data/linksPagamento";
 import { ESTILO_JANELA_CONTATO } from "@/src/components/sections/estiloJanelaContato";
 
@@ -41,6 +42,9 @@ type ConteudoProps = {
   envio: Envio;
   zap: Zap;
   aviso: string;
+  /** Texto digitado em "Quer outro valor, maior?" (só no tráfego pago). */
+  valorOutro: string;
+  onValorOutro: (texto: string) => void;
   onCanal: (canal: Canal) => void;
   onContato: (texto: string) => void;
   onAceite: (marcado: boolean) => void;
@@ -51,11 +55,15 @@ type ConteudoProps = {
 
 /** O que aparece dentro da janelinha. Separado do <dialog> para o controle (abrir/fechar) e o visual ficarem claros. */
 export function ConteudoContratar(props: ConteudoProps) {
-  const { planoId, canal, contato, aceite, isca, envio, zap, aviso } = props;
+  const { planoId, canal, contato, aceite, isca, envio, zap, aviso, valorOutro } = props;
   const resumo = resumoDoPlano(planoId);
   if (!resumo) return null;
 
-  const mensagem = mensagemDoPlano(planoId);
+  // Tráfego pago: "Quer outro valor, maior?". Só vale um valor maior que o do plano.
+  const planoTrafego = PLANOS_TRAFEGO.find((p) => p.id === planoId);
+  const valorDigitado = lerValorTrafego(valorOutro);
+  const valorMaior = planoTrafego && valorDigitado > planoTrafego.valor ? valorDigitado : 0;
+  const mensagem = mensagemDoPlano(planoId, valorMaior);
   const precisaContato = canal !== "whatsapp";
   const enviando = envio === "enviando";
   const enviado = envio === "enviado";
@@ -63,6 +71,46 @@ export function ConteudoContratar(props: ConteudoProps) {
     enviando ? "Enviando..." : canal === "whatsapp" ? "Abrir o WhatsApp com a mensagem" : canal === "email" ? (enviado ? "Enviado" : "Enviar por e-mail") : enviado ? "Enviado" : "Enviar pelo WhatsApp e por e-mail";
   const planoParaFormulario = `/?plano=${planoId}#contato`;
   const pagamento = linkDePagamento(planoId);
+  const blocoMaior = planoTrafego ? (
+    <div className="cp-maior">
+      <p>
+        <strong>Quer algum outro valor, maior?</strong> Por exemplo, {formatarValor(1500)} por mês. Coloque o valor que você pretende investir e envie uma mensagem para a Nexa MP.
+      </p>
+      <div className="cp-maior-linha">
+        <div className="cp-valor">
+          <span aria-hidden="true">R$</span>
+          <input
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            placeholder="1.500"
+            aria-label="Valor mensal que você pretende investir, em reais"
+            aria-describedby="cp-maior-dica"
+            value={valorOutro}
+            maxLength={12}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              const n = lerValorTrafego(e.target.value);
+              props.onValorOutro(n > 0 ? n.toLocaleString("pt-BR") : "");
+            }}
+          />
+        </div>
+        {valorMaior > 0 ? (
+          <a href={linkWhatsApp(mensagem)} target="_blank" rel="noopener noreferrer" className="cp-botao cp-botao-o">
+            Enviar pelo WhatsApp
+          </a>
+        ) : (
+          <span className="cp-botao cp-botao-o cp-desativado" aria-disabled="true">
+            Enviar pelo WhatsApp
+          </span>
+        )}
+      </div>
+      <p id="cp-maior-dica" className="cp-dica" role="status">
+        {valorOutro && valorMaior === 0
+          ? `Informe um valor maior que ${planoTrafego.preco}.`
+          : "Prefere e-mail? Use \"Enviar uma mensagem pronta\" mais abaixo: o valor vai junto."}
+      </p>
+    </div>
+  ) : null;
 
   return (
     <div className="cp-caixa">
@@ -90,8 +138,10 @@ export function ConteudoContratar(props: ConteudoProps) {
               <path d="M7 17 17 7M8 7h9v9" />
             </svg>
           </a>
+          {blocoMaior}
         </div>
       )}
+      {!pagamento && blocoMaior}
 
       {pagamento ? (
         <p className="cp-separador">Se você preferir, pode falar conosco</p>
@@ -204,7 +254,7 @@ export function ConteudoContratar(props: ConteudoProps) {
               ) : (
                 <>
                   Não foi possível enviar agora. Use o WhatsApp ou{" "}
-                  <a href={linkEmail(`Quero o plano ${resumo.nome}`, mensagem)}>abra no seu programa de e-mail</a>.
+                  <a href={linkEmail(tituloDoPedido(planoId, valorMaior), mensagem)}>abra no seu programa de e-mail</a>.
                 </>
               )}
             </p>
@@ -250,6 +300,7 @@ export default function ContratarPlano() {
   const [envio, setEnvio] = useState<Envio>("");
   const [zap, setZap] = useState<Zap>("");
   const [aviso, setAviso] = useState("");
+  const [valorOutro, setValorOutro] = useState("");
 
   // Qualquer botão de plano chama abrirContratacao() (src/lib/contratarPlano.ts), que dispara este evento.
   useEffect(() => {
@@ -257,6 +308,7 @@ export default function ContratarPlano() {
       const detalhe = (evento as CustomEvent<DetalheContratar>).detail;
       if (!detalhe || !resumoDoPlano(detalhe.planoId)) return;
       setPlanoId(detalhe.planoId);
+      setValorOutro("");
       setCanal("whatsapp");
       setContato("");
       setAceite(false);
@@ -327,7 +379,10 @@ export default function ContratarPlano() {
     }
     setAviso("");
 
-    const mensagem = mensagemDoPlano(planoId);
+    const planoTrafego = PLANOS_TRAFEGO.find((p) => p.id === planoId);
+    const digitado = lerValorTrafego(valorOutro);
+    const valorMaior = planoTrafego && digitado > planoTrafego.valor ? digitado : 0;
+    const mensagem = mensagemDoPlano(planoId, valorMaior);
 
     // O WhatsApp abre primeiro, dentro do clique, para o navegador não bloquear a nova aba.
     if (canal === "whatsapp" || canal === "ambos") abrirWhatsapp(mensagem);
@@ -346,7 +401,7 @@ export default function ContratarPlano() {
           mensagem: `${mensagem}\n\nMeu contato: ${contato.trim()}`,
           aceite,
           website: isca,
-          assunto: `Quero o plano ${resumo.nome}`,
+          assunto: tituloDoPedido(planoId, valorMaior),
         }),
       });
       if (resposta.ok) setEnvio("enviado");
@@ -362,6 +417,8 @@ export default function ContratarPlano() {
       {planoId && (
         <ConteudoContratar
           planoId={planoId}
+          valorOutro={valorOutro}
+          onValorOutro={setValorOutro}
           canal={canal}
           contato={contato}
           aceite={aceite}
