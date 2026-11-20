@@ -7,11 +7,14 @@ import { EVENTO_CONTRATAR, type DetalheContratar } from "@/src/lib/contratarPlan
 import { linkEmail, linkWhatsApp } from "@/src/lib/data/contato";
 import { problemaNoContato } from "@/src/lib/data/mensagemContato";
 import { mensagemDoPlano, resumoDoPlano } from "@/src/lib/data/mensagensPlanos";
+import { linkDePagamento } from "@/src/lib/data/linksPagamento";
 import { ESTILO_JANELA_CONTATO } from "@/src/components/sections/estiloJanelaContato";
 
 /**
  * Janelinha que abre quando a pessoa clica em "Quero o plano ...".
  *
+ * Opção principal: "Contratar agora", que leva ao link de pagamento do plano (src/lib/data/linksPagamento.ts).
+ * Depois, "Se você preferir, pode falar conosco":
  * Opção 1: enviar uma mensagem pronta para a Nexa MP. A pessoa escolhe somente WhatsApp, somente e-mail ou os dois.
  *          Se escolher e-mail (ou os dois), aparece a caixa para o melhor contato e o aceite da política de privacidade.
  * Opção 2: montar a própria mensagem no formulário do Contato (o plano já vai marcado).
@@ -59,6 +62,7 @@ export function ConteudoContratar(props: ConteudoProps) {
   const rotuloBotao =
     enviando ? "Enviando..." : canal === "whatsapp" ? "Abrir o WhatsApp com a mensagem" : canal === "email" ? (enviado ? "Enviado" : "Enviar por e-mail") : enviado ? "Enviado" : "Enviar pelo WhatsApp e por e-mail";
   const planoParaFormulario = `/?plano=${planoId}#contato`;
+  const pagamento = linkDePagamento(planoId);
 
   return (
     <div className="cp-caixa">
@@ -73,7 +77,27 @@ export function ConteudoContratar(props: ConteudoProps) {
         {resumo.nome}
       </h2>
       <p className="cp-detalhe">{resumo.detalhe}</p>
-      <p className="cp-pergunta">Como você prefere falar com a Nexa MP?</p>
+
+      {/* Opção principal: pagar e contratar (link da Cakto, em outra aba) */}
+      {pagamento && (
+        <div className="cp-pagar">
+          <span className="cp-mini">contratar agora</span>
+          <h3>Pagar e contratar este plano</h3>
+          <p>Você segue para a página de pagamento da Cakto, em outra aba.</p>
+          <a href={pagamento} target="_blank" rel="noopener noreferrer" className="cp-botao cp-botao-p">
+            Ir para o pagamento
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+              <path d="M7 17 17 7M8 7h9v9" />
+            </svg>
+          </a>
+        </div>
+      )}
+
+      {pagamento ? (
+        <p className="cp-separador">Se você preferir, pode falar conosco</p>
+      ) : (
+        <p className="cp-pergunta">Como você prefere falar com a Nexa MP?</p>
+      )}
 
       {/* Opção 1: mensagem pronta */}
       <form className="cp-opcao" onSubmit={props.onEnviar} noValidate>
@@ -204,7 +228,13 @@ export function ConteudoContratar(props: ConteudoProps) {
         </Link>
       </div>
 
-      <p className="cp-nota">Clicar aqui só inicia uma conversa: nenhuma cobrança.</p>
+      <p className="cp-nota">
+        Falar conosco não gera cobrança. Formas e datas de pagamento estão nos{" "}
+        <Link href="/termos" target="_blank" rel="noopener noreferrer" style={{ color: "#ff9a4d", textUnderlineOffset: 3 }}>
+          Termos de Uso
+        </Link>
+        .
+      </p>
     </div>
   );
 }

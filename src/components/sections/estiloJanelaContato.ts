@@ -68,6 +68,13 @@ export const ESTILO_JANELA_CONTATO = `
 .cp-isca{position:absolute;left:-9999px;width:0;height:0;overflow:hidden}
 .cp-nota{margin:12px 0 0;font-size:11.5px;line-height:1.55;color:rgba(255,255,255,.4)}
 
+.cp:focus,.cp:focus-visible{outline:none}
+.cp-pagar{margin-top:20px;padding:20px;border:1px solid rgba(255,106,0,.65);border-radius:20px;background:linear-gradient(160deg,rgba(255,106,0,.18),rgba(255,106,0,.04));box-shadow:0 0 40px rgba(255,106,0,.12)}
+.cp-pagar h3{margin:10px 0 0;font-size:19px;font-weight:800;color:#fff}
+.cp-pagar p{margin:6px 0 0;font-size:13px;line-height:1.55;color:rgba(255,255,255,.62)}
+.cp-botao svg{flex:none;width:16px;height:16px}
+.cp-separador{display:flex;align-items:center;gap:12px;margin:22px 0 14px;font-size:14px;font-weight:700;color:rgba(255,255,255,.85)}
+.cp-separador::before,.cp-separador::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.14)}
 @keyframes cp-fade{from{opacity:0}to{opacity:1}}
 @keyframes cp-entra{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 @media (max-width:480px){
