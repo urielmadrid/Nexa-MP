@@ -1,9 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useMovimentoReduzido } from "@/src/lib/modoSite";
 
-/** Faz o bloco aparecer suavemente quando entra na tela. Respeita "reduzir movimento". */
+/** Faz o bloco aparecer suavemente quando entra na tela. Respeita "reduzir movimento" e o modo leve. */
 export default function Reveal({
   children,
   delay = 0,
@@ -13,7 +14,7 @@ export default function Reveal({
   delay?: number;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useMovimentoReduzido();
 
   return (
     <motion.div

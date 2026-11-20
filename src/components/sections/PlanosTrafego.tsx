@@ -4,6 +4,7 @@ import Link from "next/link";
 import { aoClicarContratar } from "@/src/lib/contratarPlano";
 import { useEffect, useRef } from "react";
 import { PLANOS_TRAFEGO, TRAFEGO } from "@/src/lib/data/planos";
+import { useModoLeve } from "@/src/lib/modoSite";
 
 /**
  * Aba "Tráfego pago" dos Planos.
@@ -88,11 +89,13 @@ const ESTILO = `
 
 export default function PlanosTrafego() {
   const raiz = useRef<HTMLDivElement>(null);
+  const leve = useModoLeve();
 
   useEffect(() => {
     const el = raiz.current;
     if (!el) return;
-    // Sem observador ou com "reduzir movimento": fica no estado final, sem animar.
+    // Sem observador, com "reduzir movimento" ou no modo leve: fica no estado final, sem animar.
+    if (leve) return;
     if (typeof IntersectionObserver === "undefined") return;
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -108,7 +111,7 @@ export default function PlanosTrafego() {
     );
     observador.observe(el);
     return () => observador.disconnect();
-  }, []);
+  }, [leve]);
 
   return (
     <div ref={raiz} className="pt">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight, Code2, Layers3, MousePointer2, Sparkles, Zap, Globe2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { PLANOS, PLANOS_TRAFEGO } from "@/src/lib/data/planos";
+import { useMovimentoReduzido } from "@/src/lib/modoSite";
 
 const FRAGMENTS = [
   { x: 8, y: 20, w: 92, h: 12, d: 0 }, { x: 78, y: 12, w: 56, h: 56, d: 90 },
@@ -12,6 +13,7 @@ const FRAGMENTS = [
 ];
 
 export default function Hero() {
+  const reduzido = useMovimentoReduzido();
   const ref = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLButtonElement>(null);
   const [pointer, setPointer] = useState({ x: 30, y: 70, active: false });
@@ -21,8 +23,8 @@ export default function Hero() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // Respeita "reduzir movimento": sem rastreamento do cursor.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Respeita "reduzir movimento" e o modo leve: sem rastreamento do cursor.
+    if (reduzido || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let frame = 0;
     let last: { x: number; y: number } | null = null;
@@ -60,7 +62,7 @@ export default function Hero() {
       el.removeEventListener("pointermove", onMove);
       el.removeEventListener("pointerleave", onLeave);
     };
-  }, []);
+  }, [reduzido]);
 
   const mx = (pointer.x - 50) / 5;
   const my = (pointer.y - 50) / 5;

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { useMovimentoReduzido } from "@/src/lib/modoSite";
 import { ArrowUpRight, Layers } from "lucide-react";
 import { DIFERENCIAIS } from "@/src/lib/data/diferenciais";
 
@@ -11,7 +12,7 @@ const ROTACOES_ESPALHADO = [-8, -4, 2, 6, -3];
 const GAP_MOBILE = 16;
 
 export default function Diferenciais() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useMovimentoReduzido();
   const instante = !!reduceMotion;
 
   const secaoRef = useRef<HTMLElement>(null);

@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Cookie } from "lucide-react";
 import { EVENTO_ABRIR, lerConsentimento, salvarConsentimento } from "@/src/lib/consentimento";
+import { useMovimentoReduzido } from "@/src/lib/modoSite";
 
 const GA_ATIVO = Boolean(process.env.NEXT_PUBLIC_GA_ID);
 
@@ -15,7 +16,7 @@ const BOTAO_PRINCIPAL =
  * recusar precisa ser tão fácil quanto aceitar. A escolha fica só neste navegador.
  */
 export default function CookieBanner() {
-  const reduzir = useReducedMotion();
+  const reduzir = useMovimentoReduzido();
   const [pronto, setPronto] = useState(false);
   const [aberto, setAberto] = useState(false);
   const [painel, setPainel] = useState(false);

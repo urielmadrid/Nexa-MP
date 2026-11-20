@@ -5,7 +5,6 @@ import {
   AnimatePresence,
   motion,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -23,6 +22,7 @@ import {
 } from "lucide-react";
 import { PROCESSO } from "@/src/lib/data/processo";
 import { PLANOS } from "@/src/lib/data/planos";
+import { useMovimentoReduzido } from "@/src/lib/modoSite";
 import Button from "@/src/components/ui/Button";
 
 const ICONES = [Search, ClipboardList, Hammer, Rocket, LineChart];
@@ -68,7 +68,7 @@ function Chama({ parado }: { parado: boolean }) {
 }
 
 export default function ComoFunciona() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useMovimentoReduzido();
   const parado = !!reduceMotion;
 
   const [ativo, setAtivo] = useState<number | null>(null);

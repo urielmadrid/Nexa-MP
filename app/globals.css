@@ -326,3 +326,37 @@ body { margin: 0; background: #070707; color: #f7f7f5; font-family: var(--font-j
   background-size: 59.4px 59.4px;
   animation: bb-pole 3.2s linear infinite;
 }
+/* ---------- Modo leve ----------
+   O <html> recebe data-modo="leve" (escolhido pela pessoa) ou "pendente" (ainda não escolheu): os dois valem aqui.
+   O atributo é definido por um script no <head> (app/layout.tsx + src/lib/modoSite.ts).
+   Animações viram instantâneas (o item termina no estado final, igual ao "reduzir movimento"), o desfoque de fundo
+   sai e os enfeites só decorativos (brilhos desfocados, órbitas, ruído) deixam de ser desenhados.
+   Os seletores são repetidos de propósito (sem :is) para funcionarem em navegadores mais antigos. */
+html[data-modo="leve"],
+html[data-modo="pendente"],
+html[data-modo="leve"] *,
+html[data-modo="pendente"] *,
+html[data-modo="leve"] *::before,
+html[data-modo="pendente"] *::before,
+html[data-modo="leve"] *::after,
+html[data-modo="pendente"] *::after {animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important;scroll-behavior:auto!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;will-change:auto!important}
+html[data-modo="leve"] .nexa-orb,
+html[data-modo="pendente"] .nexa-orb,
+html[data-modo="leve"] .glow-blob,
+html[data-modo="pendente"] .glow-blob,
+html[data-modo="leve"] .cta-light,
+html[data-modo="pendente"] .cta-light,
+html[data-modo="leve"] .hero-cursor-glow,
+html[data-modo="pendente"] .hero-cursor-glow,
+html[data-modo="leve"] .cta-orbit,
+html[data-modo="pendente"] .cta-orbit,
+html[data-modo="leve"] .solution-rings,
+html[data-modo="pendente"] .solution-rings,
+html[data-modo="leve"] .problem-noise,
+html[data-modo="pendente"] .problem-noise,
+html[data-modo="leve"] .nexa-noise,
+html[data-modo="pendente"] .nexa-noise,
+html[data-modo="leve"] .animate-ping,
+html[data-modo="pendente"] .animate-ping,
+html[data-modo="leve"] [class*="blur-"]:not([class*="backdrop-blur"]),
+html[data-modo="pendente"] [class*="blur-"]:not([class*="backdrop-blur"]) {display:none!important}

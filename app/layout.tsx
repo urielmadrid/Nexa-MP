@@ -3,6 +3,9 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import GoogleAnalytics from "@/src/components/analytics/GoogleAnalytics";
 import CookieBanner from "@/src/components/ui/CookieBanner";
+import EscolhaModoSite from "@/src/components/ui/EscolhaModoSite";
+import ProvedorModo from "@/src/components/ui/ProvedorModo";
+import { SCRIPT_MODO } from "@/src/lib/modoSite";
 import ContatoRapido from "@/src/components/sections/ContatoRapido";
 import ContratarPlano from "@/src/components/sections/ContratarPlano";
 import { CONTATO } from "@/src/lib/data/contato";
@@ -133,7 +136,12 @@ const structuredData = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={jakarta.variable}>
+    // suppressHydrationWarning: o script abaixo define data-modo no <html> antes do React carregar.
+    <html lang="pt-BR" className={jakarta.variable} suppressHydrationWarning>
+      <head>
+        {/* Define o modo do site (completo ou leve) antes da página aparecer, para não piscar. Veja src/lib/modoSite.ts. */}
+        <script dangerouslySetInnerHTML={{ __html: SCRIPT_MODO }} />
+      </head>
       <body className="font-sans antialiased">
         <a
           href="#conteudo"
@@ -141,11 +149,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Pular para o conteúdo
         </a>
-        <CookieBanner />
-        {children}
+        <ProvedorModo>
+          <CookieBanner />
+          {children}
+        </ProvedorModo>
         {/* Janelinhas de contato: montadas uma vez, abertas por qualquer botão do site (planos e "Falar com a Nexa MP"). */}
         <ContratarPlano />
         <ContatoRapido />
+        {/* Janelinha "Como você prefere ver o site?" (modo completo ou leve). */}
+        <EscolhaModoSite />
         <GoogleAnalytics />
         <script
           type="application/ld+json"
