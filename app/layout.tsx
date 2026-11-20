@@ -3,6 +3,8 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import GoogleAnalytics from "@/src/components/analytics/GoogleAnalytics";
 import CookieBanner from "@/src/components/ui/CookieBanner";
+import ContatoRapido from "@/src/components/sections/ContatoRapido";
+import ContratarPlano from "@/src/components/sections/ContratarPlano";
 import { CONTATO } from "@/src/lib/data/contato";
 import { SERVICOS } from "@/src/lib/data/servicos";
 import { DESCRICAO_SITE, NOME_ALTERNATIVO, NOME_SITE, SITE_URL, TITULO_SITE } from "@/src/lib/site";
@@ -141,6 +143,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <CookieBanner />
         {children}
+        {/* Janelinhas de contato: montadas uma vez, abertas por qualquer botão do site (planos e "Falar com a Nexa MP"). */}
+        <ContratarPlano />
+        <ContatoRapido />
         <GoogleAnalytics />
         <script
           type="application/ld+json"
