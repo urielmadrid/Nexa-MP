@@ -360,3 +360,5 @@ html[data-modo="leve"] .animate-ping,
 html[data-modo="pendente"] .animate-ping,
 html[data-modo="leve"] [class*="blur-"]:not([class*="backdrop-blur"]),
 html[data-modo="pendente"] [class*="blur-"]:not([class*="backdrop-blur"]) {display:none!important}
+html[data-modo="leve"] .pt-card,
+html[data-modo="pendente"] .pt-card {opacity:1!important;transform:none!important}

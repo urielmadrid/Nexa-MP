@@ -110,7 +110,11 @@ export default function PlanosTrafego() {
       { threshold: 0.15 },
     );
     observador.observe(el);
-    return () => observador.disconnect();
+    return () => {
+      observador.disconnect();
+      // Se o modo mudou para leve antes de a animação rodar, os cards não podem ficar escondidos.
+      el.classList.remove("pt-antes");
+    };
   }, [leve]);
 
   return (
