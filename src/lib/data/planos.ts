@@ -99,7 +99,7 @@ export const PLANOS: Plano[] = PLANOS_BASE.map((plano) => {
 /**
  * Planos de tráfego pago (aba "Tráfego pago" em Planos).
  * Informado pela Nexa MP: pacote com gestão e verba de anúncios no mesmo valor, cobrado por mês.
- * O serviço é o mesmo em todas as faixas; o que muda é o valor. Não liste aqui nada que a Nexa MP não tenha confirmado.
+ * Hoje há um único plano (R$ 500 por mês). Para voltar a ter mais faixas, acrescente os valores em TRAFEGO.faixas. Não liste aqui nada que a Nexa MP não tenha confirmado.
  */
 export type PlanoTrafego = {
   id: string;
@@ -110,17 +110,17 @@ export type PlanoTrafego = {
   periodo: string;
 };
 
-/** "R$ 1.000", "R$ 5.000". */
+/** "R$ 500", "R$ 1.000". */
 export function formatarValor(valor: number): string {
   return `R$ ${valor.toLocaleString("pt-BR")}`;
 }
 
 export const TRAFEGO = {
   periodo: "por mês",
-  /** O que todas as faixas incluem. */
+  /** O que o plano inclui. */
   itens: ["Gestão das campanhas de anúncios", "Verba de anúncios incluída no valor"],
-  /** Valores das faixas, em reais. */
-  faixas: [500, 1000, 1500],
+  /** Valores dos planos, em reais. */
+  faixas: [500],
 };
 
 export const PLANOS_TRAFEGO: PlanoTrafego[] = TRAFEGO.faixas.map((valor) => ({
@@ -131,25 +131,10 @@ export const PLANOS_TRAFEGO: PlanoTrafego[] = TRAFEGO.faixas.map((valor) => ({
   periodo: TRAFEGO.periodo,
 }));
 
-/** Opção para quem quer um valor diferente (ex.: R$ 5.000 por mês). O valor viaja na URL: ?plano=trafego-personalizado&valor=5000 */
-export const TRAFEGO_PERSONALIZADO = { id: "trafego-personalizado", nome: "Tráfego pago, outro valor" };
-
-/** Limite de dígitos do valor digitado (até R$ 9.999.999). */
-export const TRAFEGO_MAX_DIGITOS = 7;
-
-/** Converte o que a pessoa digitou (ou veio na URL) em um valor em reais. Devolve 0 se não servir. */
-export function lerValorTrafego(texto: string | null | undefined): number {
-  // Ignora centavos ("5.000,50" vale 5000) para não multiplicar o valor por 100 sem querer.
-  const inteiro = (texto ?? "").split(",")[0];
-  const digitos = inteiro.replace(/\D/g, "").slice(0, TRAFEGO_MAX_DIGITOS);
-  const valor = Number(digitos);
-  return Number.isFinite(valor) && valor > 0 ? valor : 0;
-}
-
 /** O id existe em algum plano do site (presença digital ou tráfego pago)? */
 export function planoExiste(id: string | null | undefined): boolean {
   if (!id) return false;
-  return PLANOS.some((p) => p.id === id) || PLANOS_TRAFEGO.some((p) => p.id === id) || id === TRAFEGO_PERSONALIZADO.id;
+  return PLANOS.some((p) => p.id === id) || PLANOS_TRAFEGO.some((p) => p.id === id);
 }
 
 export type ValorRecurso = boolean | string;

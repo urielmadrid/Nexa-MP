@@ -6,17 +6,15 @@
 export const EVENTO_CONTRATAR = "nexa:contratar";
 
 export type DetalheContratar = {
-  /** id do plano (planos.ts), ex.: "landing-avulsa", "trafego-1000" ou "trafego-personalizado". */
+  /** id do plano (planos.ts), ex.: "landing-avulsa", "essencial" ou "trafego-500". */
   planoId: string;
-  /** Só no tráfego pago com outro valor: o valor mensal em reais. */
-  valor?: number;
   /** A janelinha marca true quando abriu. Se ninguém marcar, o clique avisa no console do navegador. */
   tratado?: boolean;
 };
 
-export function abrirContratacao(planoId: string, valor = 0): void {
+export function abrirContratacao(planoId: string): void {
   if (typeof window === "undefined") return;
-  const detail: DetalheContratar = { planoId, valor };
+  const detail: DetalheContratar = { planoId };
   window.dispatchEvent(new CustomEvent<DetalheContratar>(EVENTO_CONTRATAR, { detail }));
   // Diagnóstico: se ninguém respondeu ao evento, a janelinha não está montada (ou o plano não existe).
   if (!detail.tratado) console.warn(`[nexa] A janelinha de planos não respondeu ao clique (plano: ${planoId}). Veja se app/layout.tsx monta <ContratarPlano />.`);
@@ -29,9 +27,8 @@ export function abrirContratacao(planoId: string, valor = 0): void {
 export function aoClicarContratar(
   evento: { preventDefault: () => void; metaKey: boolean; ctrlKey: boolean; shiftKey: boolean; altKey: boolean; button: number },
   planoId: string,
-  valor = 0,
 ): void {
   if (evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey || evento.button !== 0) return;
   evento.preventDefault();
-  abrirContratacao(planoId, valor);
+  abrirContratacao(planoId);
 }

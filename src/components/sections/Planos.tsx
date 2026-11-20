@@ -216,7 +216,7 @@ export default function Planos() {
           </div>
           <p className="max-w-sm text-sm leading-6 text-white/45">
             {aba === "trafego"
-              ? "Sem taxa escondida. Os valores são os que aparecem em cada faixa."
+              ? "Sem taxa escondida. O valor é o que aparece no plano."
               : "Sem taxa escondida. Suba de andar quando fizer sentido pra você."}
           </p>
         </div>

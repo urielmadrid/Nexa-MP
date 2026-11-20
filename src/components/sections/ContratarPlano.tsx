@@ -7,7 +7,6 @@ import { EVENTO_CONTRATAR, type DetalheContratar } from "@/src/lib/contratarPlan
 import { linkEmail, linkWhatsApp } from "@/src/lib/data/contato";
 import { problemaNoContato } from "@/src/lib/data/mensagemContato";
 import { mensagemDoPlano, resumoDoPlano } from "@/src/lib/data/mensagensPlanos";
-import { TRAFEGO_PERSONALIZADO } from "@/src/lib/data/planos";
 import { ESTILO_JANELA_CONTATO } from "@/src/components/sections/estiloJanelaContato";
 
 /**
@@ -32,7 +31,6 @@ const CANAIS: { id: Canal; rotulo: string }[] = [
 
 type ConteudoProps = {
   planoId: string;
-  valor: number;
   canal: Canal;
   contato: string;
   aceite: boolean;
@@ -50,17 +48,17 @@ type ConteudoProps = {
 
 /** O que aparece dentro da janelinha. Separado do <dialog> para o controle (abrir/fechar) e o visual ficarem claros. */
 export function ConteudoContratar(props: ConteudoProps) {
-  const { planoId, valor, canal, contato, aceite, isca, envio, zap, aviso } = props;
-  const resumo = resumoDoPlano(planoId, valor);
+  const { planoId, canal, contato, aceite, isca, envio, zap, aviso } = props;
+  const resumo = resumoDoPlano(planoId);
   if (!resumo) return null;
 
-  const mensagem = mensagemDoPlano(planoId, valor);
+  const mensagem = mensagemDoPlano(planoId);
   const precisaContato = canal !== "whatsapp";
   const enviando = envio === "enviando";
   const enviado = envio === "enviado";
   const rotuloBotao =
     enviando ? "Enviando..." : canal === "whatsapp" ? "Abrir o WhatsApp com a mensagem" : canal === "email" ? (enviado ? "Enviado" : "Enviar por e-mail") : enviado ? "Enviado" : "Enviar pelo WhatsApp e por e-mail";
-  const planoParaFormulario = `/?plano=${planoId}${planoId === TRAFEGO_PERSONALIZADO.id && valor > 0 ? `&valor=${valor}` : ""}#contato`;
+  const planoParaFormulario = `/?plano=${planoId}#contato`;
 
   return (
     <div className="cp-caixa">
@@ -215,7 +213,6 @@ export default function ContratarPlano() {
   const dialogo = useRef<HTMLDialogElement>(null);
   const [aberto, setAberto] = useState(false);
   const [planoId, setPlanoId] = useState("");
-  const [valor, setValor] = useState(0);
   const [canal, setCanal] = useState<Canal>("whatsapp");
   const [contato, setContato] = useState("");
   const [aceite, setAceite] = useState(false);
@@ -228,10 +225,8 @@ export default function ContratarPlano() {
   useEffect(() => {
     function aoPedir(evento: Event) {
       const detalhe = (evento as CustomEvent<DetalheContratar>).detail;
-      const valorTrafego = detalhe?.valor ?? 0;
-      if (!detalhe || !resumoDoPlano(detalhe.planoId, valorTrafego)) return;
+      if (!detalhe || !resumoDoPlano(detalhe.planoId)) return;
       setPlanoId(detalhe.planoId);
-      setValor(valorTrafego);
       setCanal("whatsapp");
       setContato("");
       setAceite(false);
@@ -291,7 +286,7 @@ export default function ContratarPlano() {
 
   async function enviar(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const resumo = resumoDoPlano(planoId, valor);
+    const resumo = resumoDoPlano(planoId);
     if (!resumo || envio === "enviando") return;
 
     const precisaContato = canal !== "whatsapp";
@@ -302,7 +297,7 @@ export default function ContratarPlano() {
     }
     setAviso("");
 
-    const mensagem = mensagemDoPlano(planoId, valor);
+    const mensagem = mensagemDoPlano(planoId);
 
     // O WhatsApp abre primeiro, dentro do clique, para o navegador não bloquear a nova aba.
     if (canal === "whatsapp" || canal === "ambos") abrirWhatsapp(mensagem);
@@ -337,7 +332,6 @@ export default function ContratarPlano() {
       {planoId && (
         <ConteudoContratar
           planoId={planoId}
-          valor={valor}
           canal={canal}
           contato={contato}
           aceite={aceite}

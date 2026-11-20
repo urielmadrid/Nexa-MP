@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { PLANOS_TRAFEGO, formatarValor, TRAFEGO } from "@/src/lib/data/planos";
 import { SERVICOS } from "@/src/lib/data/servicos";
+import BotaoContato from "@/src/components/ui/BotaoContato";
 
 /**
  * Seção "Tráfego pago": explica, sem números inventados, como o anúncio leva a pessoa até a empresa
@@ -135,7 +135,7 @@ export default function TrafegoPago() {
             <li>
               <span>
                 <strong>Gestão e verba de anúncios no mesmo valor</strong>
-                {TRAFEGO.itens[0]} e {TRAFEGO.itens[1].toLowerCase()}, por mês, a partir de {primeira.preco}.
+                {TRAFEGO.itens[0]} e {TRAFEGO.itens[1].toLowerCase()}, por {primeira.preco} por mês.
               </span>
             </li>
             <li>
@@ -148,11 +148,11 @@ export default function TrafegoPago() {
 
           <div className="tp-acoes">
             <a href="#planos-trafego" className="tp-botao tp-botao-p">
-              Ver planos de tráfego pago
+              Ver o plano de tráfego pago
             </a>
-            <Link href="/?plano=indicacao#contato" className="tp-botao tp-botao-o">
+            <BotaoContato assunto="trafego-pago" href="/#contato" className="tp-botao tp-botao-o">
               Conversar sobre anúncios
-            </Link>
+            </BotaoContato>
           </div>
 
           <div className="tp-precos">
@@ -162,9 +162,6 @@ export default function TrafegoPago() {
                 {formatarValor(p.valor)}
               </a>
             ))}
-            <a href="#planos-trafego" className="tp-preco">
-              outro valor
-            </a>
           </div>
         </div>
 
