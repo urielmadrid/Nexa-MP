@@ -192,8 +192,14 @@ export default function Painel({ leads, recs, pastas, agora, aoAbrir, aoVerLeads
 
         <section className="crm-card crm-card-4">
           <h3>De onde vieram</h3>
-          <p className="crm-card-dica">Origem registrada pelo link (utm) ou página anterior.</p>
-          <Barras itens={m.porOrigem} />
+          <p className="crm-card-dica">Origem registrada pelo link (utm) ou página anterior. Clique numa barra para ver os leads.</p>
+          <Barras itens={m.porOrigem} aoClicar={(i) => aoVerLeads(`origem:${i.rotulo}`)} />
+        </section>
+
+        <section className="crm-card">
+          <h3>Campanhas</h3>
+          <p className="crm-card-dica">Só leads que chegaram por um link com campanha (utm_campaign). Clique numa barra para ver os leads.</p>
+          <Barras itens={m.porCampanha} max={8} vazio="Nenhum lead chegou por link com campanha ainda." aoClicar={(i) => aoVerLeads(`campanha:${i.rotulo}`)} />
         </section>
 
         <section className="crm-card">

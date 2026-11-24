@@ -75,6 +75,9 @@ export const ESTILO_CRM = `
 .crm-grade{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px;margin-top:12px}
 .crm-card{grid-column:span 6;min-width:0;padding:16px 18px;border:1px solid var(--linha);border-radius:14px;background:var(--painel)}
 .crm-card-4{grid-column:span 4}
+.crm .crm-barra-link{width:100%;padding:4px 6px;margin:-4px -6px;border:0;background:none;color:inherit;font:inherit;text-align:left;border-radius:8px;cursor:pointer}
+.crm .crm-barra-link:hover{background:rgba(255,255,255,.05)}
+.crm .crm-barra-link:hover .crm-barra-rotulo{color:var(--laranja)}
 .crm-card-8{grid-column:span 8}
 .crm-card-12{grid-column:span 12}
 .crm-card h3{margin:0;font-size:13.5px;font-weight:700}

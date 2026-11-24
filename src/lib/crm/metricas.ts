@@ -2,6 +2,7 @@ import { ORCAMENTOS, ROTULO_SERVICO, type Recomendacao } from "@/src/lib/crm/rec
 import { hojeIso } from "@/src/lib/crm/operacoes";
 import { STATUS_ABERTOS, STATUS_LEAD, type LeadCrm, type PastaCrm, type StatusLead } from "@/src/lib/crm/tipos";
 import { PERGUNTAS_DIAGNOSTICO } from "@/src/lib/formulario/diagnostico";
+import { campanhaDoLead, origemDoLead } from "@/src/lib/crm/origem";
 
 /** Números do painel. Tudo é calculado só com o que existe no CRM: sem estimativas inventadas. */
 
@@ -31,6 +32,8 @@ export type Metricas = {
   porOrcamento: ItemGrafico[];
   porSetor: ItemGrafico[];
   porOrigem: ItemGrafico[];
+  /** Só os leads que chegaram por um link com utm_campaign. */
+  porCampanha: ItemGrafico[];
   porTemperatura: ItemGrafico[];
   porPasta: ItemGrafico[];
 };
@@ -86,7 +89,6 @@ export function calcularMetricas(leads: LeadCrm[], recs: Map<string, Recomendaca
     if (!r || r.opcaoCodigos.length === 0) return "Não informado";
     return r.opcaoCodigos[0] === "outro" && r.texto ? `Outro: ${r.texto}` : rotuloOpcao("setor", r.opcaoCodigos[0]);
   };
-  const origemDe = (l: LeadCrm): string => l.origem?.utmSource || (l.origem?.referrer ? new URL(l.origem.referrer, "http://x").hostname.replace(/^www\./, "") : l.origem !== null ? "Direto / sem origem" : "Cadastro manual");
 
   const cor = { quente: "#ff5a3c", morno: "#ffb020", frio: "#5aa9ff" };
   const pastaNome = (id: string | null) => pastas.find((p) => p.id === id)?.nome ?? "Sem pasta";
@@ -110,7 +112,8 @@ export function calcularMetricas(leads: LeadCrm[], recs: Map<string, Recomendaca
     porServico: contar(abertos.map((l) => ROTULO_SERVICO[recs.get(l.id)?.servico ?? "indefinido"])),
     porOrcamento: contar(abertos.map((l) => recs.get(l.id)?.orcamentoRotulo ?? "Orçamento a definir")),
     porSetor: contar(leads.map(setorDe)),
-    porOrigem: contar(leads.map(origemDe)),
+    porOrigem: contar(leads.map(origemDoLead)),
+    porCampanha: contar(leads.map(campanhaDoLead).filter((c): c is string => c !== null)),
     porTemperatura: (["quente", "morno", "frio"] as const)
       .map((t) => ({ rotulo: t === "quente" ? "Quentes" : t === "morno" ? "Mornos" : "Frios", total: abertos.filter((l) => recs.get(l.id)?.temperatura === t).length, cor: cor[t] })),
     porPasta: contar(leads.map((l) => pastaNome(l.pastaId))),

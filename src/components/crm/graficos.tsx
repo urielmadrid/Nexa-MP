@@ -2,23 +2,34 @@
 
 import type { ItemGrafico } from "@/src/lib/crm/metricas";
 
-export function Barras({ itens, max = 6, vazio = "Sem dados ainda." }: { itens: ItemGrafico[]; max?: number; vazio?: string }) {
+export function Barras({ itens, max = 6, vazio = "Sem dados ainda.", aoClicar }: { itens: ItemGrafico[]; max?: number; vazio?: string; aoClicar?: (item: ItemGrafico) => void }) {
   if (itens.length === 0) return <p className="crm-vazio-card">{vazio}</p>;
   const lista = itens.slice(0, max);
   const maior = Math.max(...lista.map((i) => i.total), 1);
   return (
     <div className="crm-barras">
-      {lista.map((i) => (
-        <div key={i.rotulo} className="crm-barra-linha">
-          <span className="crm-barra-rotulo" title={i.rotulo}>
-            {i.rotulo}
-          </span>
-          <span className="crm-barra-trilho" role="presentation">
-            <span className="crm-barra-preenche" style={{ width: `${(i.total / maior) * 100}%`, background: i.cor }} />
-          </span>
-          <span className="crm-barra-n">{i.total}</span>
-        </div>
-      ))}
+      {lista.map((i) => {
+        const conteudo = (
+          <>
+            <span className="crm-barra-rotulo" title={i.rotulo}>
+              {i.rotulo}
+            </span>
+            <span className="crm-barra-trilho" role="presentation">
+              <span className="crm-barra-preenche" style={{ width: `${(i.total / maior) * 100}%`, background: i.cor }} />
+            </span>
+            <span className="crm-barra-n">{i.total}</span>
+          </>
+        );
+        return aoClicar ? (
+          <button key={i.rotulo} type="button" className="crm-barra-linha crm-barra-link" onClick={() => aoClicar(i)} aria-label={`${i.rotulo}: ${i.total}. Clique para ver os leads.`}>
+            {conteudo}
+          </button>
+        ) : (
+          <div key={i.rotulo} className="crm-barra-linha">
+            {conteudo}
+          </div>
+        );
+      })}
     </div>
   );
 }

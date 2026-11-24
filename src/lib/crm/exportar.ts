@@ -15,7 +15,7 @@ function celula(valor: string | number | null | undefined): string {
 
 /** CSV para Excel em português: separador ponto e vírgula, com BOM para os acentos abrirem certo. */
 export function listaEmCsv(leads: LeadCrm[], pastas: DadosCrm["pastas"], agora: Date = new Date()): string {
-  const cabecalho = ["Nome", "Empresa", "E-mail", "WhatsApp", "Status", "Pasta", "Etiquetas", "Etiqueta do sistema", "Temperatura", "Plano sugerido", "Setor", "Investimento mensal", "Entrada", "Próximo contato", "Origem (utm_source)", "Fonte"];
+  const cabecalho = ["Nome", "Empresa", "E-mail", "WhatsApp", "Status", "Pasta", "Etiquetas", "Etiqueta do sistema", "Temperatura", "Plano sugerido", "Setor", "Investimento mensal", "Entrada", "Próximo contato", "Origem (utm_source)", "Campanha (utm_campaign)", "Fonte"];
   const linhas = leads.map((l) => {
     const r = recomendar(l, agora);
     return [
@@ -34,6 +34,7 @@ export function listaEmCsv(leads: LeadCrm[], pastas: DadosCrm["pastas"], agora: 
       l.criadoEm.slice(0, 10),
       l.proximoContato,
       l.origem?.utmSource,
+      l.origem?.utmCampaign,
       l.fonte,
     ]
       .map(celula)

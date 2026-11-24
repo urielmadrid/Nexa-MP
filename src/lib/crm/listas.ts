@@ -1,6 +1,7 @@
 import type { Recomendacao } from "@/src/lib/crm/recomendar";
 import type { LeadCrm } from "@/src/lib/crm/tipos";
 import { STATUS_ABERTOS } from "@/src/lib/crm/tipos";
+import { campanhaDoLead, origemDoLead } from "@/src/lib/crm/origem";
 
 /** Listas inteligentes: filtros prontos que se atualizam sozinhos conforme os leads mudam. */
 
@@ -43,6 +44,22 @@ export const LISTAS_DOS_INDICADORES: ListaInteligente[] = [
   { id: "ind-com-orcamento", rotulo: "Com investimento informado", dica: "Leads em aberto que disseram quanto querem investir por mês.", filtro: (l, r) => aberto(l) && r.orcamentoCodigo !== null },
 ];
 
+/**
+ * Filtros criados na hora pelos gráficos do painel: "origem:email" e "campanha:desconto-trafego-design".
+ * Mostram os leads que formam aquela barra do gráfico.
+ */
+function listaDoGrafico(id: string): ListaInteligente | undefined {
+  if (id.startsWith("origem:")) {
+    const valor = id.slice("origem:".length);
+    return { id, rotulo: `Origem: ${valor}`, dica: "Leads que chegaram por esta origem.", filtro: (l) => origemDoLead(l) === valor };
+  }
+  if (id.startsWith("campanha:")) {
+    const valor = id.slice("campanha:".length);
+    return { id, rotulo: `Campanha: ${valor}`, dica: "Leads que chegaram por esta campanha.", filtro: (l) => campanhaDoLead(l) === valor };
+  }
+  return undefined;
+}
+
 export function listaPorId(id: string): ListaInteligente | undefined {
-  return LISTAS_INTELIGENTES.find((l) => l.id === id) ?? LISTAS_DOS_INDICADORES.find((l) => l.id === id);
+  return listaDoGrafico(id) ?? LISTAS_INTELIGENTES.find((l) => l.id === id) ?? LISTAS_DOS_INDICADORES.find((l) => l.id === id);
 }
